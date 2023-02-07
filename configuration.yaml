@@ -1,0 +1,97 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+http:
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+frontend:
+  themes:
+    happy:
+      primary-color: pink
+      accent-color: orange
+    sad:
+      primary-color: steelblue
+      accent-color: darkred
+
+ynab:
+  currency: "£"
+  api_key: "U-hhfjOvJVrTc1qDvnWTZ_WrkYGM6BvNIYkSDLOP7w4"
+  categories:
+    - "Eating Out / Takeaway"
+    - "Days out"
+  accounts:
+    - "Monzo"
+
+alexa:
+  smart_home:
+
+mqtt:
+  sensor:
+    - name: Garage Thermometer Temperature
+      state_topic: "govee/A4:C1:38:75:FE:24"
+      value_template: "{{ value_json.temp_c }}"
+      unit_of_measurement: "C"
+    - name: Garage Thermometer Battery
+      state_topic: "govee/A4:C1:38:75:FE:24"
+      value_template: "{{ value_json.batt }}"
+      unit_of_measurement: "%"
+
+device_tracker:
+  - platform: bt_smarthub
+
+sensor:
+  - platform: filter
+    name: Filtered Garage Temperature
+    entity_id: sensor.garage_thermometer_temperature
+    filters:
+      - filter: throttle
+        window_size: 10
+
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /config
+      - type: disk_use
+      - type: disk_free
+      - type: memory_use_percent
+      - type: memory_use
+      - type: memory_free
+      - type: swap_use_percent
+      - type: swap_use
+      - type: swap_free
+      - type: load_1m
+      - type: load_5m
+      - type: load_15m
+      - type: network_in
+        arg: eth0
+      - type: network_out
+        arg: eth0
+      - type: throughput_network_in
+        arg: eth0
+      - type: throughput_network_out
+        arg: eth0
+      - type: packets_in
+        arg: eth0
+      - type: packets_out
+        arg: eth0
+      - type: ipv4_address
+        arg: eth0
+      - type: ipv6_address
+        arg: eth0
+      - type: processor_use
+      - type: processor_temperature
+      - type: last_boot
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
