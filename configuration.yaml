@@ -2,6 +2,9 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
+homeassistant:
+  packages: !include_dir_named packages
+
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
@@ -14,15 +17,6 @@ http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
 
-frontend:
-  themes:
-    happy:
-      primary-color: pink
-      accent-color: orange
-    sad:
-      primary-color: steelblue
-      accent-color: darkred
-
 ynab:
   currency: "£"
   api_key: "U-hhfjOvJVrTc1qDvnWTZ_WrkYGM6BvNIYkSDLOP7w4"
@@ -31,9 +25,6 @@ ynab:
     - "Days out"
   accounts:
     - "Monzo"
-
-alexa:
-  smart_home:
 
 mqtt:
   sensor:

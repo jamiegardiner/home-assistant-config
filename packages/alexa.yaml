@@ -1,0 +1,70 @@
+alexa:
+  smart_home:
+    locale: en-GB
+    filter:
+      include_entities:
+        - camera.blink_garage
+        - camera.blink_driveway
+        - camera.blink_side_access
+        - camera.blink_lola_s_bedroom
+        - camera.blink_garden
+        - light.jake_s_light
+        - light.jake_s_room
+        - light.toilet
+        - light.toilet_light_1
+        - light.toilet_light_2
+        - light.lola_s_light
+        - light.garden
+        - light.garage
+        - light.dining_room
+        - light.dining_room_lamp
+        - light.bedroom_lamp_1
+        - light.bedroom_lamp_2
+        - switch.garage_halogen_heater
+        - switch.garage_fan_heater
+        - switch.fire
+        - switch.lamp
+        - media_player.jake_apos_s_tv
+        - media_player.living_room_tv
+        - media_player.roku_yx00d5142159
+        - media_player.jakes_tv
+        - sensor.jake_s_room_sensor_temperature
+        - sensor.toilet_sensor_temperature
+        - sensor.blink_garden_temperature
+        - sensor.garage_thermometer_temperature
+    entity_config:
+      camera.blink_garage:
+        name: "Garage Camera"
+        description: "The camera in the garage"
+      camera.blink_driveway:
+        name: "Driveway Camera"
+        description: "The camera at the driveway"
+      camera.blink_side_access:
+        name: "Side Access Camera"
+        description: "The camera at the side access"
+      camera.blink_lola_s_bedroom:
+        name: "Lola's Bedroom Camera"
+        description: "The camera in Lola's bedroom"
+      camera.blink_garden:
+        name: "Garden Camera"
+        description: "The camera in the garden"
+      sensor.jake_s_room_sensor_temperature:
+        name: "Jake's Room"
+        description: "The temperature in Jake's room"
+      sensor.garden_sensor_temperature:
+        name: "Garden"
+        description: "The temperature in the garden"
+      sensor.garage_thermometer_temperature:
+        name: "Garage"
+        description: "The temperature in the garage"
+      sensor.toilet_sensor_temperature:
+        name: "Toilet"
+        description: "The temperature in the toilet"
+      switch.fire:
+        display_categories: HEATER
+      switch.garage_halogen_heater:
+        display_categories: HEATER
+      switch.garage_fan_heater:
+        display_categories: HEATER
+      switch.lamp:
+        display_categories: LIGHT
