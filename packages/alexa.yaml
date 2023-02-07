@@ -9,14 +9,11 @@ alexa:
         - camera.blink_lola_s_bedroom
         - camera.blink_garden
         - light.jake_s_light
-        - light.jake_s_room
-        - light.toilet
         - light.toilet_light_1
         - light.toilet_light_2
         - light.lola_s_light
         - light.garden
         - light.garage
-        - light.dining_room
         - light.dining_room_lamp
         - light.bedroom_lamp_1
         - light.bedroom_lamp_2
@@ -24,7 +21,6 @@ alexa:
         - switch.garage_fan_heater
         - switch.fire
         - switch.lamp
-        - media_player.jake_apos_s_tv
         - media_player.living_room_tv
         - media_player.roku_yx00d5142159
         - media_player.jakes_tv
@@ -49,16 +45,16 @@ alexa:
         name: "Garden Camera"
         description: "The camera in the garden"
       sensor.jake_s_room_sensor_temperature:
-        name: "Jake's Room"
+        name: "Jake's Room Temperature"
         description: "The temperature in Jake's room"
       sensor.garden_sensor_temperature:
-        name: "Garden"
+        name: "Garden Temperature"
         description: "The temperature in the garden"
       sensor.garage_thermometer_temperature:
-        name: "Garage"
+        name: "Garage Temperature"
         description: "The temperature in the garage"
       sensor.toilet_sensor_temperature:
-        name: "Toilet"
+        name: "Toilet Temperature"
         description: "The temperature in the toilet"
       switch.fire:
         display_categories: HEATER
