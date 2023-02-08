@@ -14,12 +14,12 @@ tts:
   - platform: google_translate
 
 http:
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+  ssl_certificate: !secret ssl_certifcate_path
+  ssl_key: !secret ssl_key_path
 
 ynab:
   currency: "£"
-  api_key: "U-hhfjOvJVrTc1qDvnWTZ_WrkYGM6BvNIYkSDLOP7w4"
+  api_key: !secret ynab_token
   categories:
     - "Eating Out / Takeaway"
     - "Days out"
