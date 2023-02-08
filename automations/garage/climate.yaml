@@ -62,7 +62,7 @@ variables:
       alias: "Notify"
       service: notify.mobile_app_s21
       data:
-          title: "Garage Climate"
+        title: "Garage Climate"
 
 action:
   - choose:

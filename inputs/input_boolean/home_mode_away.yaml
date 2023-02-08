@@ -1,5 +1,5 @@
 ---
 home_mode_break:
   name: Home Mode Break
-  initial: off
+  initial: off  # yamllint disable-line rule:truthy
   icon: mdi:food
