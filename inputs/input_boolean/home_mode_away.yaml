@@ -1,0 +1,5 @@
+---
+home_mode_break:
+  name: Home Mode Break
+  initial: off
+  icon: mdi:food

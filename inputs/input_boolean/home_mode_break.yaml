@@ -1,0 +1,5 @@
+---
+home_mode_away:
+  name: Home Mode Away
+  initial: off
+  icon: mdi:car

@@ -1,0 +1,114 @@
+---
+alias: "Garage Climate"
+id: "63e99fd3-c23a-443d-99d3-eb08f8c47ea7"
+mode: queued
+
+trigger:
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
+  - platform: state
+    entity_id:
+      - input_boolean.home_mode_away
+      - input_boolean.home_mode_break
+    from: ~
+
+  - platform: time
+    id: &time_down "time_down"
+    at: "17:30:00"
+
+  - platform: time
+    id: &time_up "time_up"
+    at: "08:00:00"
+
+variables:
+  anchors:
+    - &target
+      target:
+        area_id: garage
+
+    - &turn_off
+      <<: *target
+      alias: "Turn off heating"
+      service: climate.set_hvac_mode
+      data:
+        hvac_mode: "off"
+
+    - &turn_on
+      <<: *target
+      alias: "Turn on heating"
+      service: climate.set_hvac_mode
+      data:
+        hvac_mode: "heat"
+
+    - &turn_down
+      <<: *target
+      alias: "Turn down garage heat"
+      service: climate.set_temperature
+      data:
+        temperature: 15
+
+    - &turn_up
+      <<: *target
+      alias: "Turn up garage heat"
+      service: climate.set_temperature
+      data:
+        temperature: 18
+
+    - &notify
+      alias: "Notify"
+      service: notify.mobile_app_s21
+      data:
+          title: "Garage Climate"
+
+action:
+  - choose:
+      - conditions:
+          - alias: "When the house is in away mode"
+            condition: state
+            entity_id: input_boolean.house_mode_away
+            state: "on"
+        sequence:
+          - *turn_off
+          - notify:
+              <<: *notify
+              data:
+                message: "Turned Off - Away Mode"
+
+      - conditions:
+          - alias: "When the house is in break mode"
+            condition: state
+            entity_id: input_boolean.house_mode_break
+            state: "on"
+        sequence:
+          - *turn_down
+          - notify:
+              <<: *notify
+              data:
+                message: "Turned Down - Break Mode"
+
+      - alias: "Turn off the heating after office hours"
+        conditions:
+          - condition: trigger
+            id: *time_down
+        sequence:
+          - *turn_off
+          - notify:
+              <<: *notify
+              data:
+                message: "Turned Off - Evening"
+
+      - alias: "Turn up the heating in the morning"
+        conditions:
+          - condition: trigger
+            id: *time_up
+        sequence:
+          - *turn_on
+          - *turn_up
+          - notify:
+              <<: *notify
+              data:
+                message: "Turned On - Morning"

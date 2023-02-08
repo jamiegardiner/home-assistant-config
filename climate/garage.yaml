@@ -1,0 +1,14 @@
+---
+platform: generic_thermostat
+name: Garage
+heater: switch.garage_far_heater
+target_sensor: sensor.garage_thermometer_temperature
+min_temp: 13
+max_temp: 19
+ac_mode: false
+target_temp: 16
+cold_tolerance: 0.3
+hot_tolerance: 0
+keep_alive:
+  minutes: 10
+initial_hvac_mode: "off"
