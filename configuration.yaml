@@ -14,7 +14,7 @@ tts:
   - platform: google_translate
 
 http:
-  ssl_certificate: !secret ssl_certifcate_path
+  ssl_certificate: !secret ssl_certificate_path
   ssl_key: !secret ssl_key_path
 
 ynab:
