@@ -58,9 +58,6 @@ variables:
       data:
         temperature: 18
 
-    - &notify
-      alias: "Notify"
-      service: notify.mobile_app_s21
 action:
   - choose:
       - conditions:
@@ -70,10 +67,6 @@ action:
             state: "on"
         sequence:
           - *turn_off
-          - notify:
-              <<: *notify
-              data:
-                message: "Turned Off - Away Mode"
 
       - conditions:
           - alias: "When the house is in break mode"
@@ -82,10 +75,6 @@ action:
             state: "on"
         sequence:
           - *turn_down
-          - notify:
-              <<: *notify
-              data:
-                message: "Turned Down - Break Mode"
 
       - alias: "Turn off the heating after office hours"
         conditions:
@@ -93,10 +82,6 @@ action:
             id: *time_down
         sequence:
           - *turn_off
-          - notify:
-              <<: *notify
-              data:
-                message: "Turned Off - Evening"
 
       - alias: "Turn up the heating in the morning"
         conditions:
@@ -105,7 +90,3 @@ action:
         sequence:
           - *turn_on
           - *turn_up
-          - notify:
-              <<: *notify
-              data:
-                message: "Turned On - Morning"
