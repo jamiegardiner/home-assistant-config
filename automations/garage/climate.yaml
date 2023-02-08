@@ -61,9 +61,6 @@ variables:
     - &notify
       alias: "Notify"
       service: notify.mobile_app_s21
-
-    - &notify-title
-      title: "Garage Climate"
 action:
   - choose:
       - conditions:
@@ -76,7 +73,6 @@ action:
           - notify:
               <<: *notify
               data:
-                <<: *notify-title
                 message: "Turned Off - Away Mode"
 
       - conditions:
@@ -89,7 +85,6 @@ action:
           - notify:
               <<: *notify
               data:
-                <<: *notify-title
                 message: "Turned Down - Break Mode"
 
       - alias: "Turn off the heating after office hours"
@@ -101,7 +96,6 @@ action:
           - notify:
               <<: *notify
               data:
-                <<: *notify-title
                 message: "Turned Off - Evening"
 
       - alias: "Turn up the heating in the morning"
@@ -114,5 +108,4 @@ action:
           - notify:
               <<: *notify
               data:
-                <<: *notify-title
                 message: "Turned On - Morning"
