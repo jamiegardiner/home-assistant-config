@@ -63,7 +63,7 @@ action:
       - conditions:
           - alias: "When the house is in away mode"
             condition: state
-            entity_id: input_boolean.house_mode_away
+            entity_id: input_boolean.home_mode_away
             state: "on"
         sequence:
           - *turn_off
@@ -71,9 +71,10 @@ action:
       - conditions:
           - alias: "When the house is in break mode"
             condition: state
-            entity_id: input_boolean.house_mode_break
+            entity_id: input_boolean.home_mode_break
             state: "on"
         sequence:
+          - *turn_on
           - *turn_down
 
       - alias: "Turn off the heating after office hours"
