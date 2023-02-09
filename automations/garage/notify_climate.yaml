@@ -10,14 +10,14 @@ trigger:
       - climate.garage
     attribute: hvac_action
     from: "off"
-    to: heat
+    to: heating
 
   - platform: state
     id: &state_off "heat_off"
     entity_id:
       - climate.garage
     attribute: hvac_action
-    from: heat
+    from: heating
     to: "off"
 
 condition: []
