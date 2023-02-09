@@ -75,6 +75,14 @@ action:
         sequence:
           - *turn_down
 
+      - conditions:
+          - alias: "When the house leaves break mode"
+            condition: state
+            entity_id: input_boolean.home_mode_break
+            state: "off"
+        sequence:
+          - *turn_up
+
       - alias: "Turn off the heating after office hours"
         conditions:
           - condition: trigger
