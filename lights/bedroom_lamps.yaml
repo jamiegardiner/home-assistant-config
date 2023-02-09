@@ -1,0 +1,7 @@
+---
+platform: group
+name: "Bedroom Lamps"
+all: true
+entities:
+  - light.bedroom_lamp_1
+  - light.bedroom_lamp_2

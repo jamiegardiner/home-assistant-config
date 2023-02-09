@@ -1,0 +1,4 @@
+---
+name: "Toilet Temperature"
+description: "The temperature in the toilet"
+display_categories: TEMPERATURE_SENSOR

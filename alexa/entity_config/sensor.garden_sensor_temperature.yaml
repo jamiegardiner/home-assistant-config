@@ -1,0 +1,4 @@
+---
+name: "Garden Temperature"
+description: "The temperature in the garden"
+display_categories: TEMPERATURE_SENSOR

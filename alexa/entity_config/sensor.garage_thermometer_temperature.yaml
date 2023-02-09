@@ -1,0 +1,4 @@
+---
+name: "Garage Temperature"
+description: "The temperature in the garage"
+display_categories: TEMPERATURE_SENSOR

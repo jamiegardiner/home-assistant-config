@@ -1,0 +1,7 @@
+---
+platform: group
+name: "Toilet Lights"
+all: true
+entities:
+  - light.toilet_light_1
+  - light.toilet_light_2

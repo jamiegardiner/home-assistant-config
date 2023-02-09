@@ -1,0 +1,4 @@
+---
+name: "Jake's Room Temperature"
+description: "The temperature in Jake's room"
+display_categories: TEMPERATURE_SENSOR
