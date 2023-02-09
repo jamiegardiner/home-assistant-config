@@ -36,20 +36,6 @@
     entity_id: switch.garage_fan_heater
     domain: switch
   mode: single
-- id: '1675296010350'
-  alias: Lamp - On at Sunset
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: 0
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 8ca37a0fabadcbb9d7a3b5455ea7e9c8
-    entity_id: switch.lamp
-    domain: switch
-  mode: single
 - id: '1675450951422'
   alias: Garage - Temp Above
   description: ''

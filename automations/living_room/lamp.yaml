@@ -1,0 +1,17 @@
+---
+alias: "Living Room Lamp"
+id: "a0b1c2d3-e4f5-6g7h-8i9j-0k1l2m3n4o5p"
+mode: single
+
+trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+
+condition: []
+
+action:
+  - type: turn_on
+    device_id: 8ca37a0fabadcbb9d7a3b5455ea7e9c8
+    entity_id: switch.lamp
+    domain: switch
