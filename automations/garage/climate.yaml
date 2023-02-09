@@ -48,14 +48,14 @@ variables:
       alias: "Turn down garage heat"
       service: climate.set_temperature
       data:
-        temperature: 15
+        temperature: 13.5
 
     - &turn_up
       <<: *target
       alias: "Turn up garage heat"
       service: climate.set_temperature
       data:
-        temperature: 18
+        temperature: 15.5
 
 action:
   - choose:
