@@ -1,5 +1,0 @@
----
-home_mode_away:
-  name: Home Mode Away
-  initial: off  # yamllint disable-line rule:truthy
-  icon: mdi:car

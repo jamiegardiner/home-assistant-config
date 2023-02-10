@@ -1,0 +1,28 @@
+---
+alias: "Turn on home working when the schedule is on"
+id: "1ab749ed-323e-480d-8bbb-472137af4fdf"
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: schedule.home_working
+
+action:
+  choose:
+    - conditions:
+        - condition: state
+          entity_id: schedule.home_working
+          state: "on"
+      sequence:
+        - service: input_boolean.turn_on
+          data:
+            entity_id: input_boolean.home_mode_working
+
+    - conditions:
+        - condition: state
+          entity_id: schedule.home_working
+          state: "off"
+      sequence:
+        - service: input_boolean.turn_off
+          data:
+            entity_id: input_boolean.home_mode_working

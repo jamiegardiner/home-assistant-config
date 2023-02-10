@@ -13,15 +13,18 @@ trigger:
   - platform: state
     entity_id:
       - input_boolean.home_mode_away
-      - input_boolean.home_mode_break
-
-  - platform: time
-    id: &time_down "time_down"
-    at: "17:30:00"
+      - input_boolean.home_mode_working
 
   - platform: time
     id: &time_up "time_up"
-    at: "08:00:00"
+    at: "07:30:00"
+
+condition:
+  - condition: and
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: "on"
 
 variables:
   anchors:
@@ -43,13 +46,6 @@ variables:
       data:
         hvac_mode: "heat"
 
-    - &turn_down
-      <<: *target
-      alias: "Turn down garage heat"
-      service: climate.set_temperature
-      data:
-        temperature: 13.5
-
     - &turn_up
       <<: *target
       alias: "Turn up garage heat"
@@ -68,32 +64,21 @@ action:
           - *turn_off
 
       - conditions:
-          - alias: "When the house is in break mode"
+          - alias: "When the house enters working mode"
             condition: state
-            entity_id: input_boolean.home_mode_break
+            entity_id: input_boolean.home_mode_working
             state: "on"
-        sequence:
-          - *turn_down
-
-      - conditions:
-          - alias: "When the house leaves break mode"
-            condition: state
-            entity_id: input_boolean.home_mode_break
-            state: "off"
-        sequence:
-          - *turn_up
-
-      - alias: "Turn off the heating after office hours"
-        conditions:
-          - condition: trigger
-            id: *time_down
-        sequence:
-          - *turn_off
-
-      - alias: "Turn up the heating in the morning"
-        conditions:
-          - condition: trigger
-            id: *time_up
         sequence:
           - *turn_on
           - *turn_up
+
+      - conditions:
+          - alias: "Turn up the heating in the morning"
+            conditions:
+              - condition: trigger
+                id: *time_up
+            sequence:
+              - *turn_on
+              - *turn_up
+    default:
+      - *turn_off
