@@ -1,4 +1,4 @@
 ---
-name: Home Mode Break
+name: Home Mode Away
 initial: off  # yamllint disable-line rule:truthy
-icon: mdi:food
+icon: mdi:car
