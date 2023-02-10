@@ -74,11 +74,10 @@ action:
 
       - conditions:
           - alias: "Turn up the heating in the morning"
-            conditions:
-              - condition: trigger
-                id: *time_up
-            sequence:
-              - *turn_on
-              - *turn_up
+            condition: trigger
+            id: *time_up
+        sequence:
+          - *turn_on
+          - *turn_up
     default:
       - *turn_off
