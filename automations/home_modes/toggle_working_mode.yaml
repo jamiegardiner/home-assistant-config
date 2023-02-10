@@ -10,19 +10,23 @@ trigger:
 action:
   choose:
     - conditions:
-        - condition: state
+        - alias: "When work starts"
+          condition: state
           entity_id: schedule.home_working
           state: "on"
       sequence:
-        - service: input_boolean.turn_on
+        - alias: "Turn on Home Mode - Working"
+          service: input_boolean.turn_on
           data:
             entity_id: input_boolean.home_mode_working
 
     - conditions:
-        - condition: state
+        - alias: "When work ends"
+          condition: state
           entity_id: schedule.home_working
           state: "off"
       sequence:
-        - service: input_boolean.turn_off
+        - alias: "Turn off Home Mode - Working"
+          service: input_boolean.turn_off
           data:
             entity_id: input_boolean.home_mode_working

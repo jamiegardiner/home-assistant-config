@@ -1,0 +1,36 @@
+---
+alias: "Home Mode - Sleep"
+id: "72b92651-b498-4e14-99c8-e5260aa2b81b"
+mode: single
+
+trigger:
+  - platform: tag
+    id: &tag "tag"
+    tag_id: 45fdfd57-a0fe-41f6-8261-d4f8ff585645
+
+  - platform: time
+    id: &time_up "time_up"
+    at: "08:00:00"
+
+condition: []
+
+action:
+  - choose:
+      - conditions:
+          - alias: "In the morning"
+            condition: trigger
+            id: *time_up
+        sequence:
+          - alias: "Turn off Home Mode - Sleep"
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.home_mode_sleep
+      - conditions:
+          - alias: "When trigger by tag"
+            condition: trigger
+            id: *tag
+        sequence:
+          - alias: "Turn on Home Mode - Sleep"
+            service: input_boolean.turn_on
+            data:
+              entity_id: input_boolean.home_mode_sleep

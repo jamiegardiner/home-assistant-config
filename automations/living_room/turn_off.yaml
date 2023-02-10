@@ -1,0 +1,25 @@
+---
+alias: "Living Room - Turn Off"
+id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
+
+condition: []
+
+action:
+  - service: media_player.turn_off
+    data: { }
+    target:
+      device_id: 3b63bd8eb1c2f2b66ae9a1ad605877ed
+  - service: media_player.turn_off
+    data: { }
+    target:
+      device_id: f8c42a2cf340de1211263da25fb70ab8
+  - service: switch.turn_off
+    data: { }
+    target:
+      device_id: 8ca37a0fabadcbb9d7a3b5455ea7e9c8

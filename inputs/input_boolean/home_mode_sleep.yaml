@@ -1,4 +1,4 @@
 ---
-name: Home Mode - Away
+name: Home Mode - Sleep
 initial: off  # yamllint disable-line rule:truthy
-icon: mdi:car
+icon: mdi:sleep
