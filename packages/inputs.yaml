@@ -1,3 +1,2 @@
 ---
 input_boolean: !include_dir_named ../inputs/input_boolean
-schedule: !include_dir_named ../inputs/schedule

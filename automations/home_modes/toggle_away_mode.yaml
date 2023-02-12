@@ -1,0 +1,19 @@
+---
+alias: "Toggle Home Mode - Away"
+id: "toggle_home_mode_away"
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: zone.home
+    to: 0
+    for:
+      minutes: 15
+
+conditions: []
+
+action:
+  - alias: "Turn on Home Mode - Away"
+    service: input_boolean.turn_on
+    data:
+      entity_id: input_boolean.home_mode_away

@@ -1,0 +1,14 @@
+---
+name: "Home working schedule"
+monday:
+  - from: "07:30:00"
+    to: "18:00:00"
+wednesday:
+  - from: "07:30:00"
+    to: "18:00:00"
+thursday:
+  - from: "07:30:00"
+    to: "18:00:00"
+friday:
+  - from: "07:30:00"
+    to: "18:00:00"

@@ -15,10 +15,6 @@ trigger:
       - input_boolean.home_mode_away
       - input_boolean.home_mode_working
 
-  - platform: time
-    id: &time_up "time_up"
-    at: "07:30:00"
-
 condition:
   - condition: and
     conditions:
@@ -68,14 +64,6 @@ action:
             condition: state
             entity_id: input_boolean.home_mode_working
             state: "on"
-        sequence:
-          - *turn_on
-          - *turn_up
-
-      - conditions:
-          - alias: "Turn up the heating in the morning"
-            condition: trigger
-            id: *time_up
         sequence:
           - *turn_on
           - *turn_up
