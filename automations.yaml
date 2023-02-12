@@ -1,24 +1,3 @@
-- id: '1674774898119'
-  alias: Bedtime
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: 45fdfd57-a0fe-41f6-8261-d4f8ff585645
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 3a2aa016efcaed251424296c27a93331
-    entity_id: remote.sony_kd_49xg8196
-    domain: remote
-  - type: turn_off
-    device_id: 3b63bd8eb1c2f2b66ae9a1ad605877ed
-    entity_id: remote.roku_yx00d5142159
-    domain: remote
-  - type: turn_off
-    device_id: 8ca37a0fabadcbb9d7a3b5455ea7e9c8
-    entity_id: switch.lamp
-    domain: switch
-  mode: single
 - id: '1674826775050'
   alias: Toggle Garage Heaters
   description: ''
@@ -36,20 +15,6 @@
     entity_id: switch.garage_fan_heater
     domain: switch
   mode: single
-- id: '1675450951422'
-  alias: Garage - Temp Above
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.blink_garage_temperature
-    above: 17
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 1b7af3eff0ca5891beb8cbeff6b14703
-    entity_id: switch.garage_fan_heater
-    domain: switch
-  mode: single
 - id: '1675515365804'
   alias: Lola Sleep
   description: ''
@@ -60,10 +25,10 @@
   action:
   - type: turn_off
     device_id: 9a895010e39037b05ed9cd2c61ef9774
-    entity_id: light.lola_s_room
+    entity_id: light.hue_lola_s_room
     domain: light
-  - type: turn_on
-    device_id: 3108f29ffae5beef401f318b9604e31f
-    entity_id: switch.lola_s_echo_do_not_disturb_switch
-    domain: switch
+  - service: media_player.media_stop
+    data: {}
+    target:
+      device_id: 3108f29ffae5beef401f318b9604e31f
   mode: single
