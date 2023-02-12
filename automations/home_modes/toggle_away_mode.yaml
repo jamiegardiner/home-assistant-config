@@ -10,7 +10,7 @@ trigger:
     for:
       minutes: 15
 
-conditions: []
+condition: []
 
 action:
   - alias: "Turn on Home Mode - Away"
