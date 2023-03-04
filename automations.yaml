@@ -32,3 +32,63 @@
     target:
       device_id: 3108f29ffae5beef401f318b9604e31f
   mode: single
+- id: '1676244470671'
+  alias: Arm Cameras
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - zone.home
+    to: '0'
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  condition: []
+  action:
+  - service: alarm_control_panel.alarm_arm_away
+    data: {}
+    target:
+      entity_id: alarm_control_panel.blink_home
+  mode: single
+- id: '1676902707157'
+  alias: Tag Toggle Halogen Fan is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
+  condition: []
+  action:
+  - type: toggle
+    device_id: 214fe9d6428d9b66b2f797b112898f39
+    entity_id: switch.garage_halogen_heater
+    domain: switch
+  mode: single
+- id: '1676902731394'
+  alias: Tag Toggle Halogen Fan is scanned
+  description: '
+
+    '
+  trigger:
+  - platform: tag
+    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
+  condition: []
+  action:
+  - type: toggle
+    device_id: 214fe9d6428d9b66b2f797b112898f39
+    entity_id: switch.garage_halogen_heater
+    domain: switch
+  mode: single
+- id: '1676902769164'
+  alias: Tag Toggle Halogen Fan is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
+  condition: []
+  action:
+  - type: toggle
+    device_id: 214fe9d6428d9b66b2f797b112898f39
+    entity_id: switch.garage_halogen_heater
+    domain: switch
+  mode: single
