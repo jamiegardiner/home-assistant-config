@@ -12,7 +12,7 @@ trigger:
 condition: []
 
 action:
-  service: notify.mobile_app_s21
+  service: notify.mobile_app_s23_ultra
   data:
     title: Garage Climate
     message: Changed to {{ trigger.to_state.state }}
