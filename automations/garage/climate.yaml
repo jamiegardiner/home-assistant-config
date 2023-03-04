@@ -15,12 +15,11 @@ trigger:
       - input_boolean.home_mode_away
       - input_boolean.home_mode_working
 
-condition:
-  - condition: and
-    conditions:
-      - condition: state
-        entity_id: binary_sensor.workday_sensor
-        state: "on"
+  - platform: time
+    id: "fallback_trigger"
+    at: "17:30:00"
+
+condition: []
 
 variables:
   anchors:

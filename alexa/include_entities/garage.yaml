@@ -1,5 +1,4 @@
 ---
-- camera.blink_garage
 - switch.garage_halogen_heater
 - switch.garage_fan_heater
 - sensor.garage_thermometer_temperature

@@ -15,23 +15,6 @@
     entity_id: switch.garage_fan_heater
     domain: switch
   mode: single
-- id: '1675515365804'
-  alias: Lola Sleep
-  description: ''
-  trigger:
-  - platform: time
-    at: '21:00:00'
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 9a895010e39037b05ed9cd2c61ef9774
-    entity_id: light.hue_lola_s_room
-    domain: light
-  - service: media_player.media_stop
-    data: {}
-    target:
-      device_id: 3108f29ffae5beef401f318b9604e31f
-  mode: single
 - id: '1676244470671'
   alias: Arm Cameras
   description: ''

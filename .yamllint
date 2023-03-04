@@ -10,6 +10,7 @@ ignore: |
   scenes.yaml
   scripts.yaml
   themes/*.yaml
+  govee_learning.yaml
 rules:
   braces:
     level: error

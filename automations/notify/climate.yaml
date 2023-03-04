@@ -1,11 +1,12 @@
 ---
-alias: "Notify on Garage Climate"
-id: "89052e25-cf49-4583-be63-ecb0633920cd"
-mode: single
+alias: "Notify on Climate"
+id: "4ceddd7e-aa01-4a27-9096-892e63251672"
+mode: queued
 
 trigger:
   - platform: state
     entity_id:
+      - climate.hall
       - climate.garage
     attribute: hvac_action
 
@@ -14,5 +15,5 @@ condition: []
 action:
   service: notify.mobile_app_s23_ultra
   data:
-    title: Garage Climate
-    message: Changed to {{ trigger.to_state.state }}
+    title: Climate Changed
+    message: {{ trigger.to_state.name }} to {{ trigger.to_state.state }}
