@@ -34,34 +34,6 @@
     target:
       entity_id: alarm_control_panel.blink_home
   mode: single
-- id: '1676902707157'
-  alias: Tag Toggle Halogen Fan is scanned
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
-  condition: []
-  action:
-  - type: toggle
-    device_id: 214fe9d6428d9b66b2f797b112898f39
-    entity_id: switch.garage_halogen_heater
-    domain: switch
-  mode: single
-- id: '1676902731394'
-  alias: Tag Toggle Halogen Fan is scanned
-  description: '
-
-    '
-  trigger:
-  - platform: tag
-    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
-  condition: []
-  action:
-  - type: toggle
-    device_id: 214fe9d6428d9b66b2f797b112898f39
-    entity_id: switch.garage_halogen_heater
-    domain: switch
-  mode: single
 - id: '1676902769164'
   alias: Tag Toggle Halogen Fan is scanned
   description: ''

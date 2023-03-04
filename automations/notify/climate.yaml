@@ -16,4 +16,4 @@ action:
   service: notify.mobile_app_s23_ultra
   data:
     title: Climate Changed
-    message: {{ trigger.to_state.name }} to {{ trigger.to_state.state }}
+    message: "{{ trigger.to_state.name }} to {{ trigger.to_state.state }}"
