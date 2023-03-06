@@ -8,6 +8,12 @@ trigger:
     entity_id:
       - climate.hall
       - climate.garage
+      - climate.living_room
+      - climate.bedroom
+      - climate.bedroom_lola
+      - climate.bedroom_jake
+      - climate.dining_room
+      - climate.landing
     attribute: hvac_action
 
 condition: []
@@ -16,4 +22,4 @@ action:
   service: notify.mobile_app_s23_ultra
   data:
     title: Climate Changed
-    message: "{{ trigger.to_state.name }} to {{ trigger.to_state.state }}"
+    message: "{{ trigger.to_state.name }} to {{ trigger.to_state.attributes.hvac_action }}"

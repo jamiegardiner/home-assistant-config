@@ -1,0 +1,34 @@
+---
+alias: "Bedroom - Do Not Disturb"
+id: "bedroom_do_not_disturb"
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: input_boolean.home_mode_sleep
+
+condition: []
+
+action:
+  - choose:
+      - conditions:
+          - alias: "At night"
+            condition: state
+            entity_id: input_boolean.home_mode_sleep
+            state: "on"
+        sequence:
+          - type: turn_on
+            device_id: d7e8c9be9e08807e59e48326dda9f20b
+            entity_id: switch.bedroom_echo_do_not_disturb_switch
+            domain: switch
+
+      - conditions:
+          - alias: "In the morning"
+            condition: state
+            entity_id: input_boolean.home_mode_sleep
+            state: "off"
+        sequence:
+          - type: turn_off
+            device_id: d7e8c9be9e08807e59e48326dda9f20b
+            entity_id: switch.bedroom_echo_do_not_disturb_switch
+            domain: switch
