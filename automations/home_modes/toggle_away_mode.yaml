@@ -6,7 +6,7 @@ mode: single
 trigger:
   - platform: state
     entity_id: zone.home
-    to: 0
+    to: "0"
     for:
       minutes: 15
 
