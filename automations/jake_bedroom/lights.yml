@@ -1,0 +1,142 @@
+---
+alias: Jake's Lights
+id: "jakes_light_automation"
+mode: single
+
+trigger:
+  - id: &motion_detected motion_detected
+    platform: state
+    entity_id:
+      - switch.jake_s_room_sensor_motion
+    from: "off"
+    to: "on"
+
+  - id: &motion_cleared motion_cleared
+    platform: state
+    entity_id:
+      - switch.jake_s_room_sensor_motion
+    from: "on"
+    to: "off"
+    for:
+      minutes: 10
+
+  - id: &at_sunset "at_sunset"
+    platform: sun
+    event: sunset
+    offset: 0
+
+  - id: &xbox_on "xbox_on"
+    platform: state
+    entity_id:
+      - media_player.xbox
+    from: "off"
+    to: "on"
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        device_id: 4615605dbcce244478957dab40a4f9a7
+        entity_id: light.jake_s_room
+        domain: light
+
+    - &turn_on_low
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: white
+        brightness_pct: 5
+
+    - &turn_on_high
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: white
+        brightness_pct: 100
+
+    - &turn_on_green
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: green
+        brightness_pct: 100
+
+    - &dim_to_off
+      service: light.turn_off
+      <<: *target
+      data:
+        transition: 300
+
+    - &school_nights
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - sun
+
+    - &weekends
+      weekday:
+        - fri
+        - sat
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Motion detected after 8:30pm on school nights"
+            condition: and
+            conditions:
+              - alias: "After 8:30pm"
+                condition: time
+                after: "20:30:00"
+                <<: *school_nights
+              - alias: "Motion detected"
+                condition: trigger
+                id: *motion_detected
+        sequence:
+          - *turn_on_low
+
+      - conditions:
+          - alias: "Motion detected after 9:30pm on weekends"
+            condition: and
+            conditions:
+              - alias: "After 9:30pm"
+                condition: time
+                after: "21:30:00"
+                <<: *weekends
+              - alias: "Motion detected"
+                condition: trigger
+                id: *motion_detected
+        sequence:
+          - *turn_on_low
+
+      - conditions:
+          - alias: "At sunset"
+            condition: trigger
+            id: *at_sunset
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "When Xbox is turned on"
+            condition: trigger
+            id: *xbox_on
+        sequence:
+          - *turn_on_green
+
+      - conditions:
+          - alias: "When motion is cleared"
+            condition: and
+            conditions:
+              - alias: "After 10 minutes"
+                condition: trigger
+                id: *motion_cleared
+              - alias: "After 9:30pm"
+                condition: time
+                after: "21:30:00"
+                <<: *school_nights
+        sequence:
+          - *dim_to_off
+
