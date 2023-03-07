@@ -83,6 +83,5 @@ sensor:
       - type: processor_temperature
       - type: last_boot
 
-automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
