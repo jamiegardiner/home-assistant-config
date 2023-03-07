@@ -39,8 +39,6 @@ variables:
     - &target
       target:
         device_id: 4615605dbcce244478957dab40a4f9a7
-        entity_id: light.jake_s_room
-        domain: light
 
     - &turn_on_low
       service: light.turn_on
