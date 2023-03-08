@@ -5,10 +5,10 @@ mode: single
 
 trigger:
   - platform: time
-    id: &time_up "time_down"
+    id: &time_down "time_down"
     at: '21:00:00'
   - platform: time
-    id: &time_down "time_up"
+    id: &time_up "time_up"
     at: '07:00:00'
 
 condition: []
