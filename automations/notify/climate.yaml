@@ -22,4 +22,4 @@ action:
   service: notify.mobile_app_s23_ultra
   data:
     title: "{{ trigger.to_state.name }} HVAC Changed"
-    message: "From {{ trigger.from_state.attributes.hvac_action }} to {{ trigger.to_state.attributes.hvac_action }}"
+    message: "From {{ trigger.from_state.attributes.hvac_action }} to {{ trigger.to_state.attributes.hvac_action }} ({{ trigger.to_state.attributes.temperature }})"

@@ -7,14 +7,14 @@ trigger:
   - id: &motion_detected motion_detected
     platform: state
     entity_id:
-      - switch.jake_s_room_sensor_motion
+      - binary_sensor.jake_s_room_sensor_motion
     from: "off"
     to: "on"
 
   - id: &motion_cleared motion_cleared
     platform: state
     entity_id:
-      - switch.jake_s_room_sensor_motion
+      - binary_sensor.jake_s_room_sensor_motion
     from: "on"
     to: "off"
     for:
@@ -137,4 +137,3 @@ action:
                 <<: *school_nights
         sequence:
           - *dim_to_off
-
