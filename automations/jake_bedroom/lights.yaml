@@ -25,6 +25,10 @@ trigger:
     event: sunset
     offset: 0
 
+  - id: &time_down "time_down"
+    platform: time
+    at: "21:00:00"
+
   - id: &xbox_on "xbox_on"
     platform: state
     entity_id:
@@ -123,6 +127,13 @@ action:
             id: *xbox_on
         sequence:
           - *turn_on_green
+
+      - conditions:
+          - alias: "At downtime"
+            condition: trigger
+            id: *time_down
+        sequence:
+          - *dim_to_off
 
       - conditions:
           - alias: "When motion is cleared"
