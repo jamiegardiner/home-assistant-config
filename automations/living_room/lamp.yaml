@@ -12,6 +12,6 @@ condition: []
 
 action:
   - type: turn_on
-    device_id: 8ca37a0fabadcbb9d7a3b5455ea7e9c8
-    entity_id: switch.lamp
-    domain: switch
+    device_id: b982797d2f8328b6f858ea08e0811347
+    entity_id: light.living_room
+    domain: light

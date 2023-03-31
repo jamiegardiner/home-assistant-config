@@ -19,7 +19,7 @@ action:
     data: { }
     target:
       device_id: f8c42a2cf340de1211263da25fb70ab8
-  - service: switch.turn_off
+  - service: light.turn_off
     data: { }
     target:
-      device_id: 8ca37a0fabadcbb9d7a3b5455ea7e9c8
+      device_id: b982797d2f8328b6f858ea08e0811347
