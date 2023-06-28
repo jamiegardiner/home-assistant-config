@@ -32,5 +32,5 @@ action:
         sequence:
           - type: turn_off
             device_id: 3108f29ffae5beef401f318b9604e31f
-            entity_id: switch.lola_s_echo_do_not_disturb_switchh
+            entity_id: switch.lola_s_echo_do_not_disturb_switch
             domain: switch

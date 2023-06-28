@@ -5,15 +5,36 @@ mode: single
 
 trigger:
   - platform: state
+    id: "away_trigger"
     entity_id: zone.home
     to: "0"
     for:
       minutes: 15
+  - platform: state
+    id: "home_trigger"
+    entity_id: zone.home
+    to: "1"
 
 condition: []
 
 action:
-  - alias: "Turn on Home Mode - Away"
-    service: input_boolean.turn_on
-    data:
-      entity_id: input_boolean.home_mode_away
+  - choose:
+      - conditions:
+          - alias: "When entering home"
+            condition: trigger
+            id: "home_trigger"
+        sequence:
+          - alias: "Turn off Home Mode - Away"
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.home_mode_away
+
+      - conditions:
+          - alias: "When leaving home"
+            condition: trigger
+            id: "away_trigger"
+        sequence:
+          - alias: "Turn on Home Mode - Away"
+            service: input_boolean.turn_on
+            data:
+              entity_id: input_boolean.home_mode_away
