@@ -47,3 +47,33 @@
     entity_id: switch.garage_halogen_heater
     domain: switch
   mode: single
+- id: '1691527531511'
+  alias: Turn off Lamp when away
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_mode_away
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data:
+      transition: 300
+    target:
+      device_id: d9b1cec3c420e5dd5890bd42a181ca10
+  mode: single
+- id: '1692346903737'
+  alias: Disarm Cameras
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 26fecee1-f7f6-4288-b8e9-e68ac3b8b518
+  condition: []
+  action:
+  - service: alarm_control_panel.alarm_disarm
+    data: {}
+    target:
+      entity_id: alarm_control_panel.blink_home
+  mode: single
