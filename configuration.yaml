@@ -22,7 +22,7 @@ ynab:
   api_key: !secret ynab_token
   categories:
     - "Eating Out / Takeaway"
-    - "Days out"
+    - "Family Days Out"
   accounts:
     - "Monzo"
 
@@ -36,9 +36,6 @@ mqtt:
       state_topic: "govee/A4:C1:38:75:FE:24"
       value_template: "{{ value_json.batt }}"
       unit_of_measurement: "%"
-
-device_tracker:
-  - platform: bt_smarthub
 
 sensor:
   - platform: filter
