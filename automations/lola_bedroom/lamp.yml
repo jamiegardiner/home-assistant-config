@@ -1,0 +1,125 @@
+---
+alias: "Lola's Lights"
+id: "lolas_light_automation"
+mode: restart
+
+trigger:
+  - id: &motion_detected motion_detected
+    platform: state
+    entity_id:
+      - binary_sensor.jake_s_room_sensor_motion
+    from: "off"
+    to: "on"
+
+  - id: &at_sunset "at_sunset"
+    platform: sun
+    event: sunset
+    offset: 0
+
+  - id: &school_time_down "school_night_time_down"
+    platform: time
+    at: "20:45:00"
+
+  - id: &weekend_time_down "weekend_time_down"
+    platform: time
+    at: "21:00:00"
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        device_id: 9a895010e39037b05ed9cd2c61ef9774
+        entity_id: light.hue_lola_s_room
+        domain: light
+
+    - &turn_on_low
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: white
+        brightness_pct: 25
+
+    - &turn_on_high
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: white
+        brightness_pct: 100
+
+    - &dim_to_off
+      service: light.turn_off
+      <<: *target
+      data:
+        transition: 300
+
+    - &school_nights
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - sun
+
+    - &weekends
+      weekday:
+        - fri
+        - sat
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Motion detected after 8:30pm on school nights"
+            condition: and
+            conditions:
+              - alias: "After 8:45pm"
+                condition: time
+                after: "20:45:00"
+                <<: *school_nights
+              - alias: "Motion detected"
+                condition: trigger
+                id: *motion_detected
+        sequence:
+          - *turn_on_low
+          - delay:
+              minutes: 5
+          - *dim_to_off
+
+      - conditions:
+          - alias: "Motion detected after 9:30pm on weekends"
+            condition: and
+            conditions:
+              - alias: "After 8:45pm"
+                condition: time
+                after: "20:45:00"
+                <<: *weekends
+              - alias: "Motion detected"
+                condition: trigger
+                id: *motion_detected
+        sequence:
+          - *turn_on_low
+          - delay:
+              minutes: 5
+          - *dim_to_off
+
+      - conditions:
+          - alias: "At sunset"
+            condition: trigger
+            id: *at_sunset
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "At downtime on school nights"
+            condition: trigger
+            id: *school_time_down
+        sequence:
+          - *dim_to_off
+
+      - conditions:
+          - alias: "At downtime on weekends"
+            condition: trigger
+            id: *weekend_time_down
+        sequence:
+          - *dim_to_off
