@@ -4,13 +4,6 @@ id: "jakes_light_automation"
 mode: restart
 
 trigger:
-  - id: &motion_detected motion_detected
-    platform: state
-    entity_id:
-      - binary_sensor.jake_s_room_sensor_motion
-    from: "off"
-    to: "on"
-
   - id: &at_sunset "at_sunset"
     platform: sun
     event: sunset
@@ -18,11 +11,11 @@ trigger:
 
   - id: &school_time_down "school_night_time_down"
     platform: time
-    at: "21:00:00"
+    at: "20:45:00"
 
   - id: &weekend_time_down "weekend_time_down"
     platform: time
-    at: "21:30:00"
+    at: "21:25:00"
 
 condition: []
 
@@ -31,13 +24,6 @@ variables:
     - &target
       target:
         device_id: 4615605dbcce244478957dab40a4f9a7
-
-    - &turn_on_low
-      service: light.turn_on
-      <<: *target
-      data:
-        color_name: white
-        brightness_pct: 5
 
     - &turn_on_high
       service: light.turn_on
@@ -50,57 +36,10 @@ variables:
       service: light.turn_off
       <<: *target
       data:
-        transition: 60
-
-    - &school_nights
-      weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - sun
-
-    - &weekends
-      weekday:
-        - fri
-        - sat
+        transition: 300
 
 action:
   - choose:
-      - conditions:
-          - alias: "Motion detected after 8:30pm on school nights"
-            condition: and
-            conditions:
-              - alias: "After 8:30pm"
-                condition: time
-                after: "21:00:00"
-                <<: *school_nights
-              - alias: "Motion detected"
-                condition: trigger
-                id: *motion_detected
-        sequence:
-          - *turn_on_low
-          - delay:
-              minutes: 10
-          - *dim_to_off
-
-      - conditions:
-          - alias: "Motion detected after 9:30pm on weekends"
-            condition: and
-            conditions:
-              - alias: "After 9:30pm"
-                condition: time
-                after: "21:30:00"
-                <<: *weekends
-              - alias: "Motion detected"
-                condition: trigger
-                id: *motion_detected
-        sequence:
-          - *turn_on_low
-          - delay:
-              minutes: 10
-          - *dim_to_off
-
       - conditions:
           - alias: "At sunset"
             condition: trigger

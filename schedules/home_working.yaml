@@ -6,7 +6,7 @@ monday:
 tuesday:
   - from: "07:30:00"
     to: "17:30:00"
-thursday:
+wednesday:
   - from: "07:30:00"
     to: "17:30:00"
 friday:
