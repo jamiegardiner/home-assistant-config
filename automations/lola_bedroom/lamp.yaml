@@ -16,11 +16,7 @@ trigger:
     event: sunset
     offset: 0
 
-  - id: &school_time_down "school_night_time_down"
-    platform: time
-    at: "20:45:00"
-
-  - id: &weekend_time_down "weekend_time_down"
+  - id: &down_time "down_time"
     platform: time
     at: "21:00:00"
 
@@ -52,46 +48,15 @@ variables:
       data:
         transition: 300
 
-    - &school_nights
-      weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - sun
-
-    - &weekends
-      weekday:
-        - fri
-        - sat
-
 action:
   - choose:
       - conditions:
-          - alias: "Motion detected after 8:30pm on school nights"
+          - alias: "Motion detected after downtime"
             condition: and
             conditions:
-              - alias: "After 8:45pm"
+              - alias: "After 9:00pm"
                 condition: time
-                after: "20:45:00"
-                <<: *school_nights
-              - alias: "Motion detected"
-                condition: trigger
-                id: *motion_detected
-        sequence:
-          - *turn_on_low
-          - delay:
-              minutes: 5
-          - *dim_to_off
-
-      - conditions:
-          - alias: "Motion detected after 9:30pm on weekends"
-            condition: and
-            conditions:
-              - alias: "After 8:45pm"
-                condition: time
-                after: "20:45:00"
-                <<: *weekends
+                after: "21:00:00"
               - alias: "Motion detected"
                 condition: trigger
                 id: *motion_detected
@@ -111,13 +76,6 @@ action:
       - conditions:
           - alias: "At downtime on school nights"
             condition: trigger
-            id: *school_time_down
-        sequence:
-          - *dim_to_off
-
-      - conditions:
-          - alias: "At downtime on weekends"
-            condition: trigger
-            id: *weekend_time_down
+            id: *down_time
         sequence:
           - *dim_to_off

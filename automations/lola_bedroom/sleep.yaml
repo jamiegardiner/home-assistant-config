@@ -5,16 +5,11 @@ mode: single
 
 trigger:
   - platform: time
-    at: '21:00:00'
+    at: '20:59:00'
 
 condition: []
 
 action:
-  - type: turn_off
-    device_id: 9a895010e39037b05ed9cd2c61ef9774
-    entity_id: light.hue_lola_s_room
-    domain: light
-
   - service: media_player.media_stop
     data: {}
     target:
