@@ -31,8 +31,6 @@ variables:
     - &target
       target:
         device_id: 9a895010e39037b05ed9cd2c61ef9774
-        entity_id: light.hue_lola_s_room
-        domain: light
 
     - &turn_on_low
       service: light.turn_on
