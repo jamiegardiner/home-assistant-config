@@ -16,9 +16,11 @@ trigger:
     event: sunset
     offset: 0
 
-  - id: &down_time "down_time"
-    platform: time
-    at: "21:00:00"
+  - id: &sleep_trigger sleep_trigger
+    platform: state
+    entity_id: schedule.lola_sleep
+    from: "off"
+    to: "on"
 
 condition: []
 
@@ -33,7 +35,7 @@ variables:
       <<: *target
       data:
         color_name: white
-        brightness_pct: 25
+        brightness_pct: 15
 
     - &turn_on_high
       service: light.turn_on
@@ -51,19 +53,20 @@ variables:
 action:
   - choose:
       - conditions:
-          - alias: "Motion detected after downtime"
+          - alias: "Motion detected at night"
             condition: and
             conditions:
-              - alias: "After 9:00pm"
-                condition: time
-                after: "21:00:00"
+              - alias: "When sleeping"
+                condition: state
+                entity_id: schedule.lola_sleep
+                state: "on"
               - alias: "Motion detected"
                 condition: trigger
                 id: *motion_detected
         sequence:
           - *turn_on_low
           - delay:
-              minutes: 5
+              minutes: 1
           - *dim_to_off
 
       - conditions:
@@ -74,8 +77,8 @@ action:
           - *turn_on_high
 
       - conditions:
-          - alias: "At downtime on school nights"
+          - alias: "At sleep time"
             condition: trigger
-            id: *down_time
+            id: *sleep_trigger
         sequence:
           - *dim_to_off

@@ -4,8 +4,8 @@ id: '1675515365804'
 mode: single
 
 trigger:
-  - platform: time
-    at: '20:59:00'
+  - platform: state
+    entity_id: schedule.lola_sleep
 
 condition: []
 

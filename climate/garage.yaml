@@ -3,10 +3,10 @@ platform: generic_thermostat
 name: Garage
 heater: switch.garage_fan_heater
 target_sensor: sensor.garage_thermometer_temperature
-min_temp: 12
-max_temp: 18
+min_temp: 10
+max_temp: 28
 ac_mode: false
-target_temp: 15.5
+target_temp: 16.5
 cold_tolerance: 0.1
 hot_tolerance: 0.1
 keep_alive:

@@ -4,21 +4,18 @@ id: "lola_bedroom_do_not_disturb"
 mode: single
 
 trigger:
-  - platform: time
-    id: &time_down "time_down"
-    at: '21:00:00'
-  - platform: time
-    id: &time_up "time_up"
-    at: '07:00:00'
+  - platform: state
+    entity_id: schedule.lola_sleep
 
 condition: []
 
 action:
   - choose:
       - conditions:
-          - alias: "At night"
-            condition: trigger
-            id: *time_down
+          - alias: "When sleep starts"
+            condition: state
+            entity_id: schedule.lola_sleep
+            state: "on"
         sequence:
           - type: turn_on
             device_id: 3108f29ffae5beef401f318b9604e31f
@@ -26,9 +23,10 @@ action:
             domain: switch
 
       - conditions:
-          - alias: "In the morning"
-            condition: trigger
-            id: *time_up
+          - alias: "When sleep ends"
+            condition: state
+            entity_id: schedule.lola_sleep
+            state: "off"
         sequence:
           - type: turn_off
             device_id: 3108f29ffae5beef401f318b9604e31f
