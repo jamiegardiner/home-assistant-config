@@ -1,22 +1,24 @@
 """YNAB Integration."""
 
+import json
 import logging
 import os
-from datetime import timedelta, date
-from ynab_sdk import YNAB
+from datetime import date, timedelta
 
+import aiohttp
 import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
 from homeassistant.const import CONF_API_KEY
 from homeassistant.helpers import discovery
 from homeassistant.util import Throttle
-
-import voluptuous as vol
+from ynab_sdk import YNAB
 
 from .const import (
     CONF_NAME,
-    DEFAULT_NAME,
+    DEFAULT_API_ENDPOINT,
     DEFAULT_BUDGET,
     DEFAULT_CURRENCY,
+    DEFAULT_NAME,
     DOMAIN,
     DOMAIN_DATA,
     ISSUE_URL,
@@ -77,7 +79,7 @@ async def async_setup(hass, config):
         accounts = config[DOMAIN].get("accounts")
         _LOGGER.debug("Monitoring accounts - %s", accounts)
 
-    hass.data[DOMAIN_DATA]["client"] = ynabData(hass, config)
+    hass.data[DOMAIN_DATA]["client"] = YnabData(hass, config)
 
     # load platforms
     for platform in PLATFORMS:
@@ -93,7 +95,7 @@ async def async_setup(hass, config):
     return True
 
 
-class ynabData:
+class YnabData:
     """This class handles communication and data for YNAB integration."""
 
     def __init__(self, hass, config):
@@ -104,11 +106,19 @@ class ynabData:
         self.categories = config[DOMAIN].get("categories")
         self.accounts = config[DOMAIN].get("accounts")
 
+        self.ynab = None
+        self.all_budgets = None
+        self.get_all_budgets = None
+        self.raw_budget = None
+        self.get_data = None
+
     @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def update_data(self):
         """Update data."""
 
         # setup YNAB API
+        await self.request_import()
+
         self.ynab = YNAB(self.api_key)
         self.all_budgets = await self.hass.async_add_executor_job(
             self.ynab.budgets.get_budgets
@@ -140,7 +150,11 @@ class ynabData:
 
         # get unapproved transactions
         unapproved_transactions = len(
-            [t.amount for t in self.get_data.transactions if t.approved is not True]
+            [
+                transaction.amount
+                for transaction in self.get_data.transactions
+                if transaction.approved is not True
+            ]
         )
         self.hass.data[DOMAIN_DATA]["need_approval"] = unapproved_transactions
         _LOGGER.debug(
@@ -150,7 +164,11 @@ class ynabData:
 
         # get number of uncleared transactions
         uncleared_transactions = len(
-            [t.amount for t in self.get_data.transactions if t.cleared == "uncleared"]
+            [
+                transaction.amount
+                for transaction in self.get_data.transactions
+                if transaction.cleared == "uncleared"
+            ]
         )
         self.hass.data[DOMAIN_DATA]["uncleared_transactions"] = uncleared_transactions
         _LOGGER.debug(
@@ -159,9 +177,9 @@ class ynabData:
 
         total_balance = 0
         # get account data
-        for a in self.get_data.accounts:
-            if a.on_budget:
-                total_balance += a.balance
+        for account in self.get_data.accounts:
+            if account.on_budget:
+                total_balance += account.balance
 
         # get to be budgeted data
         self.hass.data[DOMAIN_DATA]["total_balance"] = total_balance / 1000
@@ -174,71 +192,111 @@ class ynabData:
         for account in self.get_data.accounts:
             if account.name not in self.accounts:
                 continue
-            else:
-                self.hass.data[DOMAIN_DATA].update(
-                    [(account.name, account.balance / 1000)]
-                )
-                _LOGGER.debug(
-                    "Received data for account: %s",
-                    [account.name, account.balance / 1000],
-                )
+
+            self.hass.data[DOMAIN_DATA].update([(account.name, account.balance / 1000)])
+            _LOGGER.debug(
+                "Received data for account: %s",
+                [account.name, account.balance / 1000],
+            )
 
         # get current month data
-        for m in self.get_data.months:
-            if m.month != date.today().strftime("%Y-%m-01"):
+        for month in self.get_data.months:
+            if month.month != date.today().strftime("%Y-%m-01"):
                 continue
-            else:
-                # budgeted
-                self.hass.data[DOMAIN_DATA]["budgeted_this_month"] = m.budgeted / 1000
+
+            # budgeted
+            self.hass.data[DOMAIN_DATA]["budgeted_this_month"] = month.budgeted / 1000
+            _LOGGER.debug(
+                "Received data for: budgeted this month: %s",
+                self.hass.data[DOMAIN_DATA]["budgeted_this_month"],
+            )
+
+            # activity
+            self.hass.data[DOMAIN_DATA]["activity_this_month"] = month.activity / 1000
+            _LOGGER.debug(
+                "Received data for: activity this month: %s",
+                self.hass.data[DOMAIN_DATA]["activity_this_month"],
+            )
+
+            # get age of money
+            self.hass.data[DOMAIN_DATA]["age_of_money"] = month.age_of_money
+            _LOGGER.debug(
+                "Received data for: age of money: %s",
+                self.hass.data[DOMAIN_DATA]["age_of_money"],
+            )
+
+            # get number of overspend categories
+            overspent_categories = len(
+                [
+                    category.balance
+                    for category in month.categories
+                    if category.balance < 0
+                ]
+            )
+            self.hass.data[DOMAIN_DATA]["overspent_categories"] = overspent_categories
+            _LOGGER.debug(
+                "Received data for: overspent categories: %s",
+                overspent_categories,
+            )
+
+            # get remaining category balances
+            for category in month.categories:
+                if category.name not in self.categories:
+                    continue
+
+                self.hass.data[DOMAIN_DATA].update(
+                    [(category.name, category.balance / 1000)]
+                )
+                self.hass.data[DOMAIN_DATA].update(
+                    [(category.name + "_budgeted", category.budgeted / 1000)]
+                )
                 _LOGGER.debug(
-                    "Received data for: budgeted this month: %s",
-                    self.hass.data[DOMAIN_DATA]["budgeted_this_month"],
+                    "Received data for categories: %s",
+                    [category.name, category.balance / 1000, category.budgeted / 1000],
                 )
 
-                # activity
-                self.hass.data[DOMAIN_DATA]["activity_this_month"] = m.activity / 1000
-                _LOGGER.debug(
-                    "Received data for: activity this month: %s",
-                    self.hass.data[DOMAIN_DATA]["activity_this_month"],
-                )
+    async def request_import(self):
+        """Force transaction import."""
 
-                # get age of money
-                self.hass.data[DOMAIN_DATA]["age_of_money"] = m.age_of_money
-                _LOGGER.debug(
-                    "Received data for: age of money: %s",
-                    self.hass.data[DOMAIN_DATA]["age_of_money"],
-                )
+        import_endpoint = (
+            f"{DEFAULT_API_ENDPOINT}/budgets/{self.budget}/transactions/import"
+        )
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
+        }
 
-                # get number of overspend categories
-                overspent_categories = len(
-                    [c.balance for c in m.categories if c.balance < 0]
-                )
-                self.hass.data[DOMAIN_DATA][
-                    "overspent_categories"
-                ] = overspent_categories
-                _LOGGER.debug(
-                    "Received data for: overspent categories: %s",
-                    overspent_categories,
-                )
+        try:
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.post(url=import_endpoint) as response:
+                    if response.status in [200, 201]:
+                        response_data = json.loads(await response.text())
 
-                # get remaining category balances
-                for c in m.categories:
-                    if c.name not in self.categories:
-                        continue
-                    else:
-                        self.hass.data[DOMAIN_DATA].update([(c.name, c.balance / 1000)])
                         _LOGGER.debug(
-                            "Received data for categories: %s",
-                            [c.name, c.balance / 1000],
+                            "Imported transactions: %s",
+                            len(response_data["data"]["transaction_ids"]),
                         )
+                        _LOGGER.debug("API Stats: %s", response.headers["X-Rate-Limit"])
+
+                        if len(response_data["data"]["transaction_ids"]) > 0:
+                            _event_topic = DOMAIN + "_event"
+                            _event_data = {
+                                "transactions_imported": len(
+                                    response_data["data"]["transaction_ids"]
+                                )
+                            }
+                            self.hass.bus.async_fire(_event_topic, _event_data)
+
+        except Exception as error:  # pylint: disable=broad-except
+            _LOGGER.debug("Error encounted during forced import - %s", error)
 
 
 async def check_files(hass):
     """Return bool that indicates if all files are present."""
-    base = "{}/custom_components/{}/".format(hass.config.path(), DOMAIN)
+    base = f"{hass.config.path()}/custom_components/{DOMAIN}/"
     missing = []
     for file in REQUIRED_FILES:
-        fullpath = "{}{}".format(base, file)
+        fullpath = f"{base}{file}"
         if not os.path.exists(fullpath):
             missing.append(file)
 
@@ -253,9 +311,8 @@ async def check_files(hass):
 
 async def check_url():
     """Return bool that indicates YNAB URL is accessible."""
-    import aiohttp
 
-    url = "https://api.youneedabudget.com/v1"
+    url = DEFAULT_API_ENDPOINT
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -269,7 +326,7 @@ async def check_url():
                         "but wasnt able to communicate with API endpoint"
                     )
                     result = False
-    except Exception as error:
+    except Exception as error:  # pylint: disable=broad-except
         _LOGGER.debug("Unable to establish connection with YNAB - %s", error)
         result = False
 
