@@ -1,0 +1,10 @@
+---
+ynab:
+  currency: "£"
+  budget: !secret ynab_budget
+  api_key: !secret ynab_token
+  categories:
+    - "Eating Out / Takeaway"
+    - "Family Days Out"
+  accounts:
+    - "Monzo"

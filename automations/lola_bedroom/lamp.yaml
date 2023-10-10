@@ -19,8 +19,6 @@ trigger:
   - id: &sleep_trigger sleep_trigger
     platform: state
     entity_id: schedule.lola_sleep
-    from: "off"
-    to: "on"
 
 condition: []
 
@@ -28,7 +26,7 @@ variables:
   anchors:
     - &target
       target:
-        device_id: 9a895010e39037b05ed9cd2c61ef9774
+        entity_id: light.lola_s_lamp
 
     - &turn_on_low
       service: light.turn_on
@@ -77,8 +75,25 @@ action:
           - *turn_on_high
 
       - conditions:
-          - alias: "At sleep time"
-            condition: trigger
-            id: *sleep_trigger
+          - condition: and
+            conditions:
+              - condition: trigger
+                alias: "When sleep starts"
+                id: *sleep_trigger
+              - condition: state
+                entity_id: schedule.lola_sleep
+                state: "on"
+        sequence:
+          - *dim_to_off
+
+      - conditions:
+          - condition: and
+            conditions:
+              - condition: trigger
+                alias: "When sleep ends"
+                id: *sleep_trigger
+              - condition: state
+                entity_id: schedule.lola_sleep
+                state: "off"
         sequence:
           - *dim_to_off

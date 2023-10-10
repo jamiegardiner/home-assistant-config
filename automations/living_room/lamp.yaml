@@ -4,14 +4,51 @@ id: "a0b1c2d3-e4f5-6g7h-8i9j-0k1l2m3n4o5p"
 mode: single
 
 trigger:
-  - platform: sun
+  - id: "sunset_trigger"
+    platform: sun
     event: sunset
     offset: 0
+  - id: "time_trigger"
+    platform: time
+    at: "23:00:00"
 
 condition: []
 
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: light.living_room
+
+    - &turn_on_high
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: white
+        brightness_pct: 100
+
+    - &dim_to_off
+      service: light.turn_off
+      <<: *target
+      data:
+        transition: 300
+
 action:
-  - type: turn_on
-    device_id: b982797d2f8328b6f858ea08e0811347
-    entity_id: light.living_room
-    domain: light
+  - choose:
+      - conditions:
+          - alias: "At sunset"
+            condition: trigger
+            id: "sunset_trigger"
+        sequence:
+          - *turn_on_high
+      - conditions:
+          - condition: and
+            conditions:
+              - condition: trigger
+                alias: "At 11pm"
+                id: "time_trigger"
+              - condition: state
+                entity_id: input_boolean.home_mode_away
+                state: "on"
+            sequence:
+              - *dim_to_off

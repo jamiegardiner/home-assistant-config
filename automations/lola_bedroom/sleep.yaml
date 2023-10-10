@@ -11,6 +11,7 @@ condition: []
 
 action:
   - service: media_player.media_stop
-    data: {}
+    data: { }
     target:
-      device_id: 3108f29ffae5beef401f318b9604e31f
+      entity_id: media_player.lola_s_echo
+
