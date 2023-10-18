@@ -77,3 +77,31 @@
     target:
       entity_id: alarm_control_panel.blink_home
   mode: single
+- id: '1697053672408'
+  alias: Backdoor Opem
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: eb2905d7d562153d18aa0bbadcfe64c0
+    entity_id: 9f97e2294c7b8db4178f406dd733afa3
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      device_id: 839c85c699585cbd57fca8018bc65ac6
+  mode: single
+- id: '1697476695636'
+  alias: Kitchen Timer
+  description: ''
+  trigger:
+  - platform: time
+    at: sensor.kitchen_echo_show_next_timer
+  condition: []
+  action:
+  - service: notify.mobile_app_s23_ultra
+    data:
+      message: Kitchen timer up
+  mode: single
