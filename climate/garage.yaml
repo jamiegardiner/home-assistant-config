@@ -6,7 +6,7 @@ target_sensor: sensor.garage_thermometer_temperature
 min_temp: 10
 max_temp: 25
 ac_mode: false
-target_temp: "{{ states('input_number.garage_target_temp')| float(15.5) }}"
+target_temp: 16.5
 cold_tolerance: 0.1
 hot_tolerance: 0.1
 keep_alive:
