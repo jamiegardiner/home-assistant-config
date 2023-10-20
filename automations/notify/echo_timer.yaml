@@ -1,6 +1,6 @@
 ---
 alias: "Notify on Timer Up"
-id: "4ceddd7e-aa01-4a27-9096-892e63251672"
+id: "notify_on_timer_up"
 mode: queued
 
 trigger:

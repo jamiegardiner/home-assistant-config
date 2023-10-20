@@ -29,7 +29,7 @@ variables:
   anchors:
     - &target
       data:
-        entity_id: light.garden
+        entity_id: input_boolean.home_mode_away
 
     - &turn_off
       service: input_boolean.turn_off
