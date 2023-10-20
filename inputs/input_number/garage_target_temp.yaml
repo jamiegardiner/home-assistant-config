@@ -1,0 +1,9 @@
+---
+name: Garage Climate - Starting Temp
+icon: mdi:thermometer-lines
+initial: 16.5
+min: 10
+max: 25
+mode: slider
+unit_of_measurement: "°C"
+step: 0.5

@@ -78,22 +78,7 @@ action:
           - condition: and
             conditions:
               - condition: trigger
-                alias: "When sleep starts"
+                alias: "When sleep starts/stops"
                 id: *sleep_trigger
-              - condition: state
-                entity_id: schedule.lola_sleep
-                state: "on"
-        sequence:
-          - *dim_to_off
-
-      - conditions:
-          - condition: and
-            conditions:
-              - condition: trigger
-                alias: "When sleep ends"
-                id: *sleep_trigger
-              - condition: state
-                entity_id: schedule.lola_sleep
-                state: "off"
         sequence:
           - *dim_to_off

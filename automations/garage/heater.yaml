@@ -1,0 +1,52 @@
+---
+name: "Garage Heater"
+id: "c6cb4461-0434-44fa-b63d-90127acbcf30"
+mode: single
+
+trigger:
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
+  - id: "home_mode_working"
+    platform: state
+    entity_id: input_boolean.home_mode_working
+    to: "off"
+
+  - platform: time
+    id: "fallback_trigger"
+    at: "18:00:00"
+
+  - platform: tag
+    id: &tag_scanned "tag_scanned"
+    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: switch.garage_halogen_heater
+
+    - &turn_off
+      service: switch.turn_off
+      <<: *target
+
+    - &toggle
+      service: switch.toggle
+      <<: *target
+
+action:
+  - choose:
+      - conditions:
+          - alias: "When tagged scanned"
+            condition: trigger
+            id: *tag_scanned
+        sequence:
+          - *toggle
+
+    default:
+      - *turn_off

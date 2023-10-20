@@ -1,0 +1,19 @@
+---
+name: "Living Room - Fire"
+id: "c8e221f5-959d-4d53-bc83-02c984f67d4d"
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: switch.fire
+    to: "on"
+    for:
+      minutes: 30
+
+condition: []
+
+action:
+  - service: switch.turn_off
+    data: { }
+    target:
+      entity_id: switch.fire

@@ -1,0 +1,88 @@
+---
+alias: "Garden - Lights"
+id: "garden_light_automation"
+mode: restart
+
+trigger:
+  - id: "at_sunset"
+    platform: sun
+    event: sunset
+    offset: 0
+
+  - id: "at_sunrise"
+    platform: sun
+    event: sunrise
+    offset: 0
+
+  - id: "at 11pm"
+    platform: time
+    at: "23:00:00"
+
+  - id: &back_door_opened "back_door_opened"
+    platform: state
+    entity_id:
+      - binary_sensor.back_door
+    from: "off"
+    to: "on"
+
+  - id: "back_door_closed"
+    platform: state
+    entity_id:
+      - binary_sensor.back_door
+    from: "on"
+    to: "off"
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: light.garden
+
+    - &night_light
+      service: hue.activate_scene
+      data: { }
+      target:
+        entity_id: scene.garden_nightlight
+
+    - &turn_on_high
+      service: light.turn_on
+      <<: *target
+      data:
+        color_name: white
+        brightness_pct: 100
+
+    - &dim_to_off
+      service: light.turn_off
+      <<: *target
+      data:
+        transition: 300
+
+action:
+  - choose:
+      - conditions:
+          - alias: "When backdoor opened"
+            condition: trigger
+            id: *back_door_opened
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "After sunset and before sunrise"
+            condition: sun
+            before: sunrise
+            after: sunset
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "After 11pm and before sunrise"
+            condition: time
+            after: "10:59:59"
+            before: sensor.sun_next_dawn
+        sequence:
+          - *night_light
+
+    default:
+      - *dim_to_off

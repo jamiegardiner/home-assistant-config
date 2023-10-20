@@ -5,36 +5,59 @@ mode: single
 
 trigger:
   - platform: state
-    id: "away_trigger"
+    id: &away "away"
     entity_id: zone.home
     to: "0"
     for:
       minutes: 15
+
   - platform: state
-    id: "home_trigger"
+    id: &home "home"
     entity_id: zone.home
     to: "1"
 
+  - platform: state
+    id: &alarm_armed "alarm_armed"
+    entity_id: alarm_control_panel.welling_alarm
+    to: "armed_away"
+    for:
+      minutes: 1
+
 condition: []
+
+variables:
+  anchors:
+    - &target
+      data:
+        entity_id: light.garden
+
+    - &turn_off
+      service: input_boolean.turn_off
+      <<: *target
+
+    - &turn_on
+      service: input_boolean.turn_on
+      <<: *target
 
 action:
   - choose:
       - conditions:
           - alias: "When entering home"
             condition: trigger
-            id: "home_trigger"
+            id: *home
         sequence:
-          - alias: "Turn off Home Mode - Away"
-            service: input_boolean.turn_off
-            data:
-              entity_id: input_boolean.home_mode_away
+          - *turn_off
 
       - conditions:
-          - alias: "When leaving home"
+          - alias: "When away for 15 minutes"
             condition: trigger
-            id: "away_trigger"
+            id: *away
         sequence:
-          - alias: "Turn on Home Mode - Away"
-            service: input_boolean.turn_on
-            data:
-              entity_id: input_boolean.home_mode_away
+          - *turn_on
+
+      - conditions:
+          - alias: "When alarm is armed"
+            condition: trigger
+            id: *alarm_armed
+        sequence:
+          - *turn_on

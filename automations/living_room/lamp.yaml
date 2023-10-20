@@ -4,13 +4,23 @@ id: "a0b1c2d3-e4f5-6g7h-8i9j-0k1l2m3n4o5p"
 mode: single
 
 trigger:
-  - id: "sunset_trigger"
+  - id: &on_sunset "sunset_trigger"
     platform: sun
     event: sunset
     offset: 0
-  - id: "time_trigger"
+
+  - id: &at_11 "time_trigger"
     platform: time
     at: "23:00:00"
+
+  - id: "sleep_mode"
+    platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
+
+  - platform: state
+    entity_id: alarm_control_panel.welling_alarm
+    to: "armed_home"
 
 condition: []
 
@@ -33,22 +43,30 @@ variables:
       data:
         transition: 300
 
+    - &turn_off
+      service: light.turn_off
+      <<: *target
+
 action:
   - choose:
       - conditions:
           - alias: "At sunset"
             condition: trigger
-            id: "sunset_trigger"
+            id: *on_sunset
         sequence:
           - *turn_on_high
+
       - conditions:
           - condition: and
             conditions:
               - condition: trigger
                 alias: "At 11pm"
-                id: "time_trigger"
+                id: *at_11
               - condition: state
                 entity_id: input_boolean.home_mode_away
                 state: "on"
-            sequence:
-              - *dim_to_off
+        sequence:
+          - *dim_to_off
+
+    default:
+      - *turn_off

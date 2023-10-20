@@ -1,0 +1,49 @@
+---
+alias: "Toggle Cameras"
+id: "toggle_cameras"
+mode: single
+
+trigger:
+  - platform: input_boolean
+    id: &when_away "when_away"
+    alias: "When away"
+    entity_id: input_boolean.away_mode
+    to: "on"
+
+  - platform: tag
+    id: &scan_tag "scan_tag"
+    tag_id: 26fecee1-f7f6-4288-b8e9-e68ac3b8b518
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: alarm_control_panel.blink_home
+
+    - &turn_on
+      service: alarm_control_panel.alarm_arm_away
+      data: { }
+      <<: *target
+
+    - &turn_off
+      service: alarm_control_panel.alarm_disarm
+      <<: *target
+      data: { }
+
+actions:
+  - choose:
+      - conditions:
+          - alias: "When away"
+            condition: trigger
+            id: *when_away
+        sequence:
+          - *turn_on
+
+      - conditions:
+          - alias: "When tag scanned"
+            condition: trigger
+            id: *scan_tag
+        sequence:
+          - *turn_off

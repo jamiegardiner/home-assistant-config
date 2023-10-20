@@ -1,0 +1,15 @@
+---
+alias: "Notify on Timer Up"
+id: "4ceddd7e-aa01-4a27-9096-892e63251672"
+mode: queued
+
+trigger:
+  - platform: time
+    at: sensor.kitchen_echo_show_next_timer
+
+condition: []
+
+action:
+  service: notify.mobile_app_s23_ultra
+  data:
+    message: "{{ trigger.to_state.name }} timer up"

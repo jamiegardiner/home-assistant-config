@@ -1,5 +1,5 @@
 ---
-alias: "Living Room - Turn Off"
+alias: "Living Room TV"
 id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
 mode: single
 
@@ -7,6 +7,10 @@ trigger:
   - platform: state
     entity_id: input_boolean.home_mode_sleep
     to: "on"
+
+  - platform: state
+    entity_id: alarm_control_panel.welling_alarm
+    to: "armed_home"
 
 condition: []
 
@@ -18,8 +22,4 @@ action:
   - service: media_player.turn_off
     data: { }
     target:
-      device_id: f8c42a2cf340de1211263da25fb70ab8
-  - service: light.turn_off
-    data: { }
-    target:
-      device_id: b982797d2f8328b6f858ea08e0811347
+      device_id: f347ed341cd748aa5fa9b35370fd6d5e
