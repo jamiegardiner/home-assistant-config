@@ -32,7 +32,7 @@ variables:
       <<: *target
       data: { }
 
-actions:
+action:
   - choose:
       - conditions:
           - alias: "When away"

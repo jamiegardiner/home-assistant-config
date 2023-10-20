@@ -38,7 +38,7 @@ variables:
   anchors:
     - &target
       target:
-        entity_id: light.garden
+        area_id: garden
 
     - &night_light
       service: hue.activate_scene
@@ -47,11 +47,10 @@ variables:
         entity_id: scene.garden_nightlight
 
     - &turn_on_high
-      service: light.turn_on
-      <<: *target
-      data:
-        color_name: white
-        brightness_pct: 100
+      service: hue.activate_scene
+      data: { }
+      target:
+        entity_id: scene.garden_bright
 
     - &dim_to_off
       service: light.turn_off
@@ -69,20 +68,20 @@ action:
           - *turn_on_high
 
       - conditions:
-          - alias: "After sunset and before sunrise"
-            condition: sun
-            before: sunrise
-            after: sunset
-        sequence:
-          - *turn_on_high
-
-      - conditions:
           - alias: "After 11pm and before sunrise"
             condition: time
             after: "10:59:59"
             before: sensor.sun_next_dawn
         sequence:
           - *night_light
+
+      - conditions:
+          - alias: "After sunset and before sunrise"
+            condition: sun
+            before: sunrise
+            after: sunset
+        sequence:
+          - *turn_on_high
 
     default:
       - *dim_to_off
