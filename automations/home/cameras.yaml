@@ -4,9 +4,8 @@ id: "toggle_cameras"
 mode: single
 
 trigger:
-  - platform: input_boolean
+  - platform: state
     id: &when_away "when_away"
-    alias: "When away"
     entity_id: input_boolean.away_mode
     to: "on"
 
