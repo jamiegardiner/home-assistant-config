@@ -6,7 +6,8 @@ mode: single
 trigger:
   - platform: state
     id: &when_away "when_away"
-    entity_id: input_boolean.away_mode
+    entity_id:
+      - input_boolean.home_mode_away
     to: "on"
 
   - platform: tag
