@@ -18,11 +18,6 @@ trigger:
     entity_id: input_boolean.home_mode_sleep
     to: "on"
 
-  - id: &alarm_home "alarm_home"
-    platform: state
-    entity_id: alarm_control_panel.welling_alarm
-    to: "armed_home"
-
 condition: []
 
 variables:
@@ -58,7 +53,8 @@ action:
           - *turn_on_high
 
       - conditions:
-          - condition: and
+          - alias: "At 11pm when away"
+            condition: and
             conditions:
               - condition: trigger
                 alias: "At 11pm"
@@ -73,12 +69,5 @@ action:
           - alias: "Sleep mode"
             condition: trigger
             id: *sleep_mode
-        sequence:
-          - *turn_off
-
-      - conditions:
-          - alias: "Armed home"
-            condition: trigger
-            id: *alarm_home
         sequence:
           - *turn_off

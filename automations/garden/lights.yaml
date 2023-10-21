@@ -32,6 +32,13 @@ trigger:
     from: "on"
     to: "off"
 
+  - id: &motion_detected "motion_detected"
+    platform: state
+    entity_id:
+      - binary_sensor.garden_sensor_motion
+    from: "off"
+    to: "on"
+
 condition: []
 
 variables:
@@ -39,6 +46,11 @@ variables:
     - &target
       target:
         area_id: garden
+
+    - &after_sunset
+      condition: sun
+      after: sunset
+      before: sunrise
 
     - &night_light
       service: hue.activate_scene
@@ -56,16 +68,30 @@ variables:
       service: light.turn_off
       <<: *target
       data:
-        transition: 300
+        transition: 60
 
 action:
   - choose:
       - conditions:
-          - alias: "When backdoor opened"
-            condition: trigger
-            id: *back_door_opened
+          - alias: "Backdoor opened and after sunset"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: *back_door_opened
+              - <<: *after_sunset
         sequence:
           - *turn_on_high
+
+      - conditions:
+          - alias: "Motion detected after sunset"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: *motion_detected
+              - <<: *after_sunset
+        sequence:
+          - *turn_on_high
+          - *dim_to_off
 
       - conditions:
           - alias: "After 11pm and before sunrise"
@@ -77,9 +103,7 @@ action:
 
       - conditions:
           - alias: "After sunset and before sunrise"
-            condition: sun
-            before: sunrise
-            after: sunset
+            <<: *after_sunset
         sequence:
           - *turn_on_high
 

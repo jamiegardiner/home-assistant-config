@@ -10,6 +10,10 @@ trigger:
     for:
       minutes: 30
 
+  - platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
+
 condition: []
 
 action:

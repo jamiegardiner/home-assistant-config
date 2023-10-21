@@ -1,0 +1,16 @@
+---
+alias: "Spotify"
+id: "a9a2a3ef-e6a2-4d62-a57d-7f88dc4bd9f1"
+mode: single
+
+trigger:
+  - platform: time
+    at: "01:30:00"
+
+condition: []
+
+action:
+  - service: media_player.media_pause
+    data: {}
+    target:
+      entity_id: media_player.spotify_jamie_gardiner
