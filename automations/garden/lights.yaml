@@ -96,7 +96,7 @@ action:
       - conditions:
           - alias: "After 11pm and before sunrise"
             condition: time
-            after: "10:59:59"
+            after: "22:59:59"
             before: sensor.sun_next_dawn
         sequence:
           - *night_light

@@ -14,4 +14,3 @@ action:
     data: { }
     target:
       entity_id: media_player.lola_s_echo
-
