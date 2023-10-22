@@ -5,11 +5,17 @@ mode: queued
 
 trigger:
   - platform: time
+    id: "Kitchen Echo"
     at: sensor.kitchen_echo_show_next_timer
 
 condition: []
 
 action:
-  service: notify.mobile_app_s23_ultra
-  data:
-    message: "{{ trigger.to_state.name }} timer up"
+  - service: notify.mobile_app_s23_ultra
+    data:
+      message: "{{ trigger.id }} timer up"
+
+  - service: notify.alexa_media
+    data:
+      target: media_player.living_room_echo
+      message: "{{ trigger.id }}'s timer is ringing"

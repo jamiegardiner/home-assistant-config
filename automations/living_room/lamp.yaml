@@ -4,6 +4,10 @@ id: "a0b1c2d3-e4f5-6g7h-8i9j-0k1l2m3n4o5p"
 mode: single
 
 trigger:
+  - platform: time
+    id: &kitchen_echo_timer "kitchen_ echo_timer"
+    at: sensor.kitchen_echo_show_next_timer
+
   - id: &on_sunset "sunset_trigger"
     platform: sun
     event: sunset
@@ -43,8 +47,38 @@ variables:
       service: light.turn_off
       <<: *target
 
+    - &create_before_scene
+      service: scene.create
+      data:
+        scene_id: "living_room_lamp_before"
+        snapshot_entities:
+          - light.living_room
+
+    - &flash
+      service: light.turn_on
+      <<: *target
+      data:
+        brightness_pct: 100
+        flash: long
+
+    - &restore_before_scene
+      service: scene.turn_on
+      data:
+        scene_id: "living_room_lamp_before"
+      target:
+        entity_id: light.living_room
+
 action:
   - choose:
+      - conditions:
+          - alias: "On timer up"
+            condition: trigger
+            id: *kitchen_echo_timer
+        sequence:
+          - *create_before_scene
+          - *flash
+          - *restore_before_scene
+
       - conditions:
           - alias: "At sunset"
             condition: trigger
