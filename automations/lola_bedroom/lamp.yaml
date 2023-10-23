@@ -24,29 +24,22 @@ condition: []
 
 variables:
   anchors:
-    - &target
-      target:
-        entity_id: light.lola_s_lamp
-
     - &turn_on_low
-      service: light.turn_on
-      <<: *target
-      data:
-        color_name: white
-        brightness_pct: 15
+      service: scene.turn_on
+      data: {}
+      target:
+        entity_id: scene.lola_s_room_nightlight
 
     - &turn_on_high
-      service: light.turn_on
-      <<: *target
-      data:
-        color_name: white
-        brightness_pct: 100
+      service: scene.turn_on
+      data: {}
+      target:
+        entity_id: scene.lola_s_room_bright
 
-    - &dim_to_off
+    - &turn_off
       service: light.turn_off
-      <<: *target
-      data:
-        transition: 120
+      target:
+        entity_id: light.lola_s_lamp
 
 action:
   - choose:
@@ -64,8 +57,8 @@ action:
         sequence:
           - *turn_on_low
           - delay:
-              minutes: 1
-          - *dim_to_off
+              minutes: 3
+          - *turn_off
 
       - conditions:
           - alias: "At sunset"
@@ -75,10 +68,8 @@ action:
           - *turn_on_high
 
       - conditions:
-          - condition: and
-            conditions:
-              - condition: trigger
-                alias: "When sleep starts/stops"
-                id: *sleep_trigger
+          - alias: "When sleep starts/stops"
+            condition: trigger
+            id: *sleep_trigger
         sequence:
-          - *dim_to_off
+          - *turn_off
