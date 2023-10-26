@@ -1,3 +1,5 @@
 ---
-automation: !include ../automations.yaml
-automation split: !include_dir_list ../automations
+# automations created in the UI
+automation ui: !include ../automations.yaml
+# automations created in YAML
+automation manual: !include_dir_list ../automations

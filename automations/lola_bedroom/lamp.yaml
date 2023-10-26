@@ -39,7 +39,7 @@ variables:
     - &turn_off
       service: light.turn_off
       target:
-        entity_id: light.lola_s_lamp
+        entity_id: light.lola_s_light
 
 action:
   - choose:

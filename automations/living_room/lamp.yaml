@@ -50,7 +50,7 @@ variables:
     - &create_before_scene
       service: scene.create
       data:
-        scene_id: "living_room_lamp_before"
+        scene_id: living_room_lamp_before
         snapshot_entities:
           - light.living_room
 
@@ -63,10 +63,8 @@ variables:
 
     - &restore_before_scene
       service: scene.turn_on
-      data:
-        scene_id: "living_room_lamp_before"
       target:
-        entity_id: light.living_room
+        entity_id: scene.living_room_lamp_before
 
 action:
   - choose:
