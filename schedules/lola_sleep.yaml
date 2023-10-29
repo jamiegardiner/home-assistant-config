@@ -3,22 +3,22 @@ name: "Lola Sleep schedule"
 monday:
   - from: "00:00:00"
     to: "07:30:00"
-  - from: "20:30:00"
+  - from: "20:40:00"
     to: "24:00:00"
 tuesday:
   - from: "00:00:00"
     to: "07:30:00"
-  - from: "20:30:00"
+  - from: "20:40:00"
     to: "24:00:00"
 wednesday:
   - from: "00:00:00"
     to: "07:30:00"
-  - from: "20:30:00"
+  - from: "20:40:00"
     to: "24:00:00"
 thursday:
   - from: "00:00:00"
     to: "07:30:00"
-  - from: "20:30:00"
+  - from: "20:40:00"
     to: "24:00:00"
 friday:
   - from: "00:00:00"
@@ -33,5 +33,5 @@ saturday:
 sunday:
   - from: "00:00:00"
     to: "07:30:00"
-  - from: "20:30:00"
+  - from: "20:40:00"
     to: "24:00:00"

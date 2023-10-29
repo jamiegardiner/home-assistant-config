@@ -20,6 +20,10 @@ trigger:
     platform: state
     entity_id: schedule.lola_sleep
 
+  - id: &fallback_trigger fallback_trigger
+    platform: time
+    at: "22:00:00"
+
 condition: []
 
 variables:
@@ -45,12 +49,15 @@ action:
   - choose:
       - conditions:
           - alias: "Motion detected at night"
-            condition: and
-            conditions:
+            and:
               - alias: "When sleeping"
                 condition: state
                 entity_id: schedule.lola_sleep
                 state: "on"
+              - alias: "Light is off"
+                condition: state
+                entity_id: light.lola_s_light
+                state: "off"
               - alias: "Motion detected"
                 condition: trigger
                 id: *motion_detected
@@ -68,8 +75,12 @@ action:
           - *turn_on_high
 
       - conditions:
-          - alias: "When sleep starts/stops"
-            condition: trigger
-            id: *sleep_trigger
+          or:
+            - alias: "When sleep starts/stops"
+              condition: trigger
+              id: *sleep_trigger
+            - alias: "On fallback trigger"
+              condition: trigger
+              id: *fallback_trigger
         sequence:
           - *turn_off
