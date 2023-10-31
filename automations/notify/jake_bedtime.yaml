@@ -1,0 +1,18 @@
+---
+alias: Notify Jake Bedtime
+id: "2bfe144b-3dc3-43b7-b605-7a3131cfec48"
+mode: single
+
+trigger:
+  - platform: time
+    at: input_datetime.jake_next_bedtime
+
+condition: []
+
+action:
+  - service: notify.alexa_media
+    data:
+      target:
+        - media_player.living_room_echo
+        - media_player.jake_s_echo
+      message: Jake, it's your bedtime. Go and brush your teeth.
