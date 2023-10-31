@@ -17,10 +17,10 @@ action:
             entity_id: input_boolean.home_mode_sleep
             state: "on"
         sequence:
-          - type: turn_on
-            device_id: d7e8c9be9e08807e59e48326dda9f20b
-            entity_id: switch.bedroom_echo_do_not_disturb_switch
-            domain: switch
+          - service: switch.turn_on
+            data: { }
+            target:
+              entity_id: switch.bedroom_echo_do_not_disturb_switch
 
       - conditions:
           - alias: "In the morning"
@@ -28,7 +28,7 @@ action:
             entity_id: input_boolean.home_mode_sleep
             state: "off"
         sequence:
-          - type: turn_off
-            device_id: d7e8c9be9e08807e59e48326dda9f20b
-            entity_id: switch.bedroom_echo_do_not_disturb_switch
-            domain: switch
+          - service: switch.turn_off
+            data: { }
+            target:
+              entity_id: switch.bedroom_echo_do_not_disturb_switch

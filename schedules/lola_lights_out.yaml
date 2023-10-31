@@ -1,5 +1,5 @@
 ---
-name: "Lola Sleep schedule"
+name: "Lola light's out"
 monday:
   - from: "00:00:00"
     to: "07:30:00"

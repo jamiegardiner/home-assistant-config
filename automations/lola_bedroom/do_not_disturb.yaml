@@ -5,7 +5,7 @@ mode: single
 
 trigger:
   - platform: state
-    entity_id: schedule.lola_sleep
+    entity_id: schedule.lights_out
 
 condition: []
 
@@ -14,21 +14,21 @@ action:
       - conditions:
           - alias: "When sleep starts"
             condition: state
-            entity_id: schedule.lola_sleep
+            entity_id: schedule.lights_out
             state: "on"
         sequence:
-          - type: turn_on
-            device_id: 3108f29ffae5beef401f318b9604e31f
-            entity_id: switch.lola_s_echo_do_not_disturb_switch
-            domain: switch
+          - service: switch.turn_on
+            data: { }
+            target:
+              entity_id: switch.lola_s_echo_do_not_disturb_switch
 
       - conditions:
           - alias: "When sleep ends"
             condition: state
-            entity_id: schedule.lola_sleep
+            entity_id: schedule.lights_out
             state: "off"
         sequence:
-          - type: turn_off
-            device_id: 3108f29ffae5beef401f318b9604e31f
-            entity_id: switch.lola_s_echo_do_not_disturb_switch
-            domain: switch
+          - service: switch.turn_off
+            data: { }
+            target:
+              entity_id: switch.lola_s_echo_do_not_disturb_switch

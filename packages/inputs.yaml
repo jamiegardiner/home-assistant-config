@@ -1,3 +1,4 @@
 ---
 input_boolean: !include_dir_named ../inputs/input_boolean
 input_number: !include_dir_named ../inputs/input_number
+input_datetime: !include_dir_named ../inputs/input_datetime

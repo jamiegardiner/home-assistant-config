@@ -23,7 +23,7 @@ variables:
   anchors:
     - &target
       target:
-        device_id: 4615605dbcce244478957dab40a4f9a7
+        entity_id: light.jake_s_light
 
     - &turn_on_high
       service: light.turn_on
