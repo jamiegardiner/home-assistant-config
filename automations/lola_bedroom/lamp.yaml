@@ -18,7 +18,7 @@ trigger:
 
   - id: &sleep_trigger sleep_trigger
     platform: state
-    entity_id: schedule.lights_out
+    entity_id: schedule.lola_lights_out
 
   - id: &fallback_trigger fallback_trigger
     platform: time
@@ -52,7 +52,7 @@ action:
             and:
               - alias: "When sleeping"
                 condition: state
-                entity_id: schedule.lights_out
+                entity_id: schedule.lola_lights_out
                 state: "on"
               - alias: "Motion detected"
                 condition: trigger

@@ -32,12 +32,19 @@ trigger:
     from: "on"
     to: "off"
 
-  - id: &motion_detected "motion_detected"
+  - id: &motion_detected_on "motion_detected_on"
     platform: state
     entity_id:
       - binary_sensor.garden_sensor_motion
     from: "off"
     to: "on"
+
+  - id: "motion_detected_off"
+    platform: state
+    entity_id:
+      - binary_sensor.garden_sensor_motion
+    from: "on"
+    to: "off"
 
 condition: []
 
@@ -87,11 +94,10 @@ action:
             condition: and
             conditions:
               - condition: trigger
-                id: *motion_detected
+                id: *motion_detected_on
               - <<: *after_sunset
         sequence:
           - *turn_on_high
-          - *dim_to_off
 
       - conditions:
           - alias: "After 11pm and before sunrise"

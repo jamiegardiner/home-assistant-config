@@ -15,9 +15,12 @@ trigger:
     entity_id: input_boolean.home_mode_working
     to: "off"
 
-  - platform: time
-    id: "fallback_trigger"
-    at: "18:00:00"
+  - platform: state
+    id: "safety_fallback"
+    entity_id: switch.garage_halogen_heater
+    to: "on"
+    for:
+      hours: 3
 
   - platform: tag
     id: &tag_scanned "tag_scanned"

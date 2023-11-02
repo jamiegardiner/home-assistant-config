@@ -1,5 +1,5 @@
 ---
-name: Garage Climate - Starting Temp
+name: Garage Climate - Target Temp
 icon: mdi:thermometer-lines
 initial: 16.5
 min: 10

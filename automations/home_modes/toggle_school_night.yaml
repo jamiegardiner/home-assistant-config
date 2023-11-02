@@ -4,6 +4,12 @@ id: 6f667a77-53e4-4702-b28b-1c8f9c884c34
 mode: single
 
 trigger:
+  - platform: calendar
+    id: &event_start "event_start"
+    entity_id: calendar.school_holidays
+    event: start
+    offset: "-12:00:00"
+
   - platform: time
     at: "0:00:00"
 
@@ -37,6 +43,13 @@ variables:
 
 action:
   - choose:
+      - conditions:
+          - condition: trigger
+            id: *event_start
+            alias: "When school holidays start"
+        sequence:
+          - *turn_off
+
       - conditions:
           - condition: template
             alias: "When weekend"

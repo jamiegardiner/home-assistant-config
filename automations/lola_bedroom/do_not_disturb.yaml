@@ -5,7 +5,7 @@ mode: single
 
 trigger:
   - platform: state
-    entity_id: schedule.lights_out
+    entity_id: schedule.lola_lights_out
 
 condition: []
 
@@ -14,7 +14,7 @@ action:
       - conditions:
           - alias: "When sleep starts"
             condition: state
-            entity_id: schedule.lights_out
+            entity_id: schedule.lola_lights_out
             state: "on"
         sequence:
           - service: switch.turn_on
@@ -25,7 +25,7 @@ action:
       - conditions:
           - alias: "When sleep ends"
             condition: state
-            entity_id: schedule.lights_out
+            entity_id: schedule.lola_lights_out
             state: "off"
         sequence:
           - service: switch.turn_off

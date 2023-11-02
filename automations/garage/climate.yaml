@@ -15,10 +15,6 @@ trigger:
       - input_boolean.home_mode_away
       - input_boolean.home_mode_working
 
-  - platform: time
-    id: "fallback_trigger"
-    at: "18:00:00"
-
 condition: []
 
 variables:

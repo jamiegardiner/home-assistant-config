@@ -4,21 +4,46 @@ id: "1ab749ed-323e-480d-8bbb-472137af4fdf"
 mode: single
 
 trigger:
+  - platform: time
+    id: &fallback_trigger "fallback_trigger"
+    at: "18:00:00"
+
   - platform: state
     entity_id: schedule.home_working
 
+condition: []
+
+variables:
+  anchors:
+    - &target
+      data:
+        entity_id: input_boolean.home_mode_working
+
+    - &turn_off
+      alias: "Turn off Home Mode - Working"
+      service: input_boolean.turn_off
+      <<: *target
+
+    - &turn_on
+      alias: "Turn on Home Mode - Working"
+      service: input_boolean.turn_on
+      <<: *target
+
 action:
   choose:
+    - conditions:
+        - condition: trigger
+          id: *fallback_trigger
+      sequence:
+        - *turn_off
+
     - conditions:
         - alias: "When work starts"
           condition: state
           entity_id: schedule.home_working
           state: "on"
       sequence:
-        - alias: "Turn on Home Mode - Working"
-          service: input_boolean.turn_on
-          data:
-            entity_id: input_boolean.home_mode_working
+        - *turn_on
 
     - conditions:
         - alias: "When work ends"
@@ -26,7 +51,4 @@ action:
           entity_id: schedule.home_working
           state: "off"
       sequence:
-        - alias: "Turn off Home Mode - Working"
-          service: input_boolean.turn_off
-          data:
-            entity_id: input_boolean.home_mode_working
+        - *turn_off

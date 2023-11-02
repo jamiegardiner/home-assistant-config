@@ -16,3 +16,6 @@ action:
         - media_player.living_room_echo
         - media_player.jake_s_echo
       message: Jake, it's your bedtime. Go and brush your teeth.
+      data:
+        type: announce
+        method: all
