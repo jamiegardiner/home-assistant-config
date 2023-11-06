@@ -1,0 +1,11 @@
+---
+mqtt:
+  sensor:
+    - name: Garage Thermometer Temperature
+      state_topic: "govee/A4:C1:38:75:FE:24"
+      value_template: "{{ value_json.temp_c }}"
+      unit_of_measurement: "C"
+    - name: Garage Thermometer Battery
+      state_topic: "govee/A4:C1:38:75:FE:24"
+      value_template: "{{ value_json.batt }}"
+      unit_of_measurement: "%"
