@@ -1,0 +1,15 @@
+---
+alias: "Backup - Full (Nightly)"
+id: "eada677b-e35c-4b96-b1d2-6f2945e9c7c8"
+mode: single
+
+trigger:
+  - platform: time
+    at: "03:00:00"
+
+condition: []
+
+action:
+  - service: hassio.backup_full
+    data:
+      name: "{{as_timestamp(trigger.now)|timestamp_custom('%Y%m%d%H%M', true)}}_automated-backup"

@@ -1,0 +1,15 @@
+---
+alias: "Backup - Ship to S3"
+id: "5c415a9a-6ec9-4f1b-ac1e-1186766b7fe6"
+mode: single
+
+trigger:
+  - platform: time_pattern
+    minutes: "180"
+
+condition: []
+
+action:
+  service: hassio.addon_start
+  data:
+    addon: 1244bd6e_amazon-s3-backup
