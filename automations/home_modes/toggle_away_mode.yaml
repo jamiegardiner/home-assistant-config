@@ -1,5 +1,5 @@
 ---
-alias: "Toggle Home Mode - Away"
+alias: Home Mode - Away
 id: "toggle_home_mode_away"
 mode: single
 

@@ -1,5 +1,5 @@
 ---
-alias: "Notify on Timer Up"
+alias: "Notify - Echo"
 id: "notify_on_timer_up"
 mode: queued
 
