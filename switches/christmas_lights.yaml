@@ -1,0 +1,11 @@
+---
+platform: group
+name: "Christmas Lights"
+unique_id: "christmas_lights"
+all: true
+entities:
+  - switch.kasa_1
+  - switch.tapo_1
+  - switch.tapo_2
+  - switch.tp_link_power_strip_b193_tapo_strip_1
+  - switch.tp_link_power_strip_b193_tapo_strip_2
