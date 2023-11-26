@@ -20,7 +20,7 @@ action:
             target:
               entity_id: input_datetime.jake_next_bedtime
             data:
-              time: "20:20:00"
+              time: "20:30:00"
 
       - conditions:
           - condition: state
@@ -31,4 +31,4 @@ action:
             target:
               entity_id: input_datetime.jake_next_bedtime
             data:
-              time: "21:00:00"
+              time: "21:10:00"

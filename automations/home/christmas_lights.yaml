@@ -3,8 +3,44 @@ alias: Christmas Lights
 id: "christmas_lights"
 mode: single
 
-trigger: []
+trigger:
+  - id: &on_sunset "sunset_trigger"
+    platform: sun
+    event: sunset
+    offset: 0
+
+  - id: "off_time"
+    platform: time
+    at: "22:30:00"
+
+  - id: "on_sleep"
+    platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
 
 condition: []
 
-action: []
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: switch.christmas_lights
+
+    - &turn_on
+      service: switch.turn_on
+      <<: *target
+
+    - &turn_off
+      service: switch.turn_off
+      <<: *target
+
+action:
+  - choose:
+      - conditions:
+          alias: "At sunset"
+          condition: trigger
+          id: *on_sunset
+        sequence:
+          *turn_on
+    default:
+      *turn_off
