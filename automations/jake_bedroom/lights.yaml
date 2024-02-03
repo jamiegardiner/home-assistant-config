@@ -1,6 +1,6 @@
 ---
 alias: Jake Bedroom - Lights
-id: "jakes_light_automation"
+id: "0ebf3a00-4dd6-4f79-afe0-750b43a61cbf"
 mode: restart
 
 trigger:
@@ -12,7 +12,6 @@ trigger:
   - id: &bedtime "bedtime"
     platform: time
     at: input_datetime.jake_next_bedtime
-    offset: 900
 
 condition: []
 
@@ -44,8 +43,10 @@ action:
           - *turn_on_high
 
       - conditions:
-          - alias: "At downtime on weekends"
+          - alias: "At bedtime"
             condition: trigger
             id: *bedtime
         sequence:
+          - delay:
+              minutes: 20
           - *dim_to_off
