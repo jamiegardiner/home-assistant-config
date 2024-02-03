@@ -5,13 +5,16 @@ mode: single
 
 trigger:
   - platform: time
-    id: &fallback_trigger "fallback_trigger"
+    id: "fallback_trigger"
     at: "18:00:00"
 
   - platform: state
     entity_id: schedule.home_working
 
-condition: []
+condition:
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: "on"
 
 variables:
   anchors:
@@ -30,25 +33,15 @@ variables:
       <<: *target
 
 action:
-  choose:
-    - conditions:
-        - condition: trigger
-          id: *fallback_trigger
-      sequence:
-        - *turn_off
+  - choose:
+      - conditions:
+          - alias: "When work starts"
+            condition: state
+            entity_id: schedule.home_working
+            state: "on"
+        sequence:
+          - *turn_on
 
-    - conditions:
-        - alias: "When work starts"
-          condition: state
-          entity_id: schedule.home_working
-          state: "on"
-      sequence:
-        - *turn_on
+    default:
+      - *turn_off
 
-    - conditions:
-        - alias: "When work ends"
-          condition: state
-          entity_id: schedule.home_working
-          state: "off"
-      sequence:
-        - *turn_off
