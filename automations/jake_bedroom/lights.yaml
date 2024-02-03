@@ -26,11 +26,10 @@ variables:
         entity_id: light.jake_s_light
 
     - &turn_on_high
-      service: light.turn_on
-      <<: *target
-      data:
-        color_name: white
-        brightness_pct: 100
+      service: hue.activate_scene
+      data: { }
+      target:
+        entity_id: scene.jake_s_room_bright
 
     - &dim_to_off
       service: light.turn_off
