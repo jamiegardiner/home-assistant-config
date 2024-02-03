@@ -1,6 +1,7 @@
 ---
 platform: group
 name: "Bedroom Lamps"
+unique_id: "bedroom_lamps"
 all: true
 entities:
   - light.bedroom_lamp_1

@@ -1,6 +1,7 @@
 ---
 platform: group
 name: "Toilet Lights"
+unique_id: "toilet_lights"
 all: true
 entities:
   - light.toilet_light_1

@@ -1,0 +1,84 @@
+---
+alias: "Bedrooms - Lamps"
+id: "ee9d1c72-e956-4ed4-800c-0136e9b14dab"
+mode: restart
+
+trigger:
+  - id: &on_sunset "on_sunset"
+    platform: sun
+    event: sunset
+    offset: 0
+
+  - id: &at_night "at_night"
+    platform: time
+    at: "22:00:00"
+
+  - id: &at_wakeup "at_wakeup"
+    platform: time
+    at: "08:30:00"
+
+  - id: "at_morning_off"
+    platform: time
+    at: "09:20:00"
+
+  - id: "sleep_mode"
+    platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: light.bedroom_lamps
+
+    - &turn_on_high
+      service: scene.turn_on
+      data: {}
+      target:
+        entity_id: scene.bedroom_bright
+
+    - &dim_to_off
+      service: light.turn_off
+      <<: *target
+      data:
+        transition: 1200
+
+    - &turn_off
+      service: light.turn_off
+      <<: *target
+
+  is_weekday:
+    "{{ now().isoweekday() in [1, 2, 3, 4, 5] }}"
+
+action:
+  - choose:
+      - conditions:
+          - alias: "At sunset"
+            condition: trigger
+            id: *on_sunset
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "At wake up"
+            and:
+              - condition: trigger
+                id: *at_wakeup
+              - condition: template
+                value_template: "{{ is_weekday }}"
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "At night"
+            condition: trigger
+            id: *at_night
+        sequence:
+          - *dim_to_off
+
+    default:
+      - *turn_off
+

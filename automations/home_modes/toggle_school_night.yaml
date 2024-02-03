@@ -33,7 +33,7 @@ variables:
     "{{ states('calendar.school_holidays') == 'on' }}"
 
   next_event_end:
-    "{{ as_local(as_datetime(state_attr('calendar.school_holidays', 'end_time'))) }}"
+    "{{ as_local(as_datetime(state_attr('calendar.school_holidays', 'end_time') or 0)) }}"
 
   next_midnight:
     "{{ now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1) }}"

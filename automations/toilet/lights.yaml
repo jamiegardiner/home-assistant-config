@@ -1,0 +1,55 @@
+---
+alias: "Toilet - Lights"
+id: "6a79fe34-3998-48f8-a585-9ce5de93fdd5"
+mode: restart
+
+trigger:
+  - id: motion_detected
+    platform: state
+    entity_id:
+      - binary_sensor.toilet_sensor_motion
+
+condition: []
+
+variables:
+  anchors:
+    - &turn_on_low
+      service: scene.turn_on
+      data: {}
+      target:
+        entity_id: scene.toilet_dimmed
+
+    - &turn_on_high
+      service: scene.turn_on
+      data: {}
+      target:
+        entity_id: scene.toilet_bright
+
+    - &turn_off
+      service: light.turn_off
+      target:
+        entity_id: light.toilet_lights
+
+    - &is_night
+      condition: time
+      after: "22:00:00"
+      before: sensor.sun_next_dawn
+
+    - &delay
+      delay:
+        minutes: 5
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Motion detected at night"
+            <<: *is_night
+        sequence:
+          - *turn_on_low
+          - *delay
+          - *turn_off
+
+    default:
+      - *turn_on_high
+      - *delay
+      - *turn_off

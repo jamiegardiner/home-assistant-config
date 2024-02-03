@@ -77,12 +77,16 @@ variables:
       data:
         transition: 60
 
+    - &back_door_closed
+      condition: state
+      entity_id: binary_sensor.back_door
+      state: "off"
+
 action:
   - choose:
       - conditions:
           - alias: "Backdoor opened and after sunset"
-            condition: and
-            conditions:
+            and:
               - condition: trigger
                 id: *back_door_opened
               - <<: *after_sunset
@@ -91,8 +95,7 @@ action:
 
       - conditions:
           - alias: "Motion detected after sunset"
-            condition: and
-            conditions:
+            and:
               - condition: trigger
                 id: *motion_detected_on
               - <<: *after_sunset
@@ -101,9 +104,11 @@ action:
 
       - conditions:
           - alias: "After 11pm and before sunrise"
-            condition: time
-            after: "22:59:59"
-            before: sensor.sun_next_dawn
+            and:
+              - condition: time
+                after: "22:59:59"
+                before: sensor.sun_next_dawn
+              - <<: *back_door_closed
         sequence:
           - *night_light
 

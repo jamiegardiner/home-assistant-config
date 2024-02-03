@@ -1,0 +1,82 @@
+---
+alias: "Dining Room - Lamp"
+id: "733f7778-2208-4524-b7cb-dade2980a84b"
+mode: single
+
+trigger:
+  - id: &on_sunset "sunset_trigger"
+    platform: sun
+    event: sunset
+    offset: 0
+
+  - id: &at_dim_time "dim_trigger"
+    platform: time
+    at: "22:00:00"
+
+  - id: &at_away_off_time "time_trigger"
+    platform: time
+    at: "22:30:00"
+
+  - id: &sleep_mode "sleep_mode"
+    platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: light.dining_room_lamp
+
+    - &dimmed
+      service: hue.activate_scene
+      data: { }
+      target:
+        entity_id: scene.dining_room_dimmed
+
+    - &turn_on_high
+      service: hue.activate_scene
+      data: { }
+      target:
+        entity_id: scene.dining_room_bright
+
+    - &turn_off
+      service: light.turn_off
+      <<: *target
+
+action:
+  - choose:
+      - conditions:
+          - alias: "At sunset"
+            condition: trigger
+            id: *on_sunset
+        sequence:
+          - *turn_on_high
+
+      - conditions:
+          - alias: "At 10pm"
+            condition: trigger
+            id: *at_dim_time
+        sequence:
+          - *dimmed
+
+      - conditions:
+          - alias: "At 11pm when away"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: *at_away_off_time
+              - condition: state
+                entity_id: input_boolean.home_mode_away
+                state: "on"
+        sequence:
+          - *turn_off
+
+      - conditions:
+          - alias: "Sleep mode"
+            condition: trigger
+            id: *sleep_mode
+        sequence:
+          - *turn_off
