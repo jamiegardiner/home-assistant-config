@@ -1,0 +1,6 @@
+---
+name: Lola - Next Bedtime
+icon: mdi:bed-clock
+has_date: false
+has_time: true
+initial: "19:45:00"

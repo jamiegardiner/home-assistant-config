@@ -1,6 +1,6 @@
 ---
-alias: "Bedroom - Do Not Disturb"
-id: "bedroom_do_not_disturb"
+alias: "Bedroom - Echo"
+id: "ca7314e2-fd39-478f-a30b-f826809f9a40"
 mode: single
 
 trigger:
@@ -18,7 +18,6 @@ action:
             state: "on"
         sequence:
           - service: switch.turn_on
-            data: { }
             target:
               entity_id: switch.bedroom_echo_do_not_disturb_switch
 
@@ -29,6 +28,5 @@ action:
             state: "off"
         sequence:
           - service: switch.turn_off
-            data: { }
             target:
               entity_id: switch.bedroom_echo_do_not_disturb_switch

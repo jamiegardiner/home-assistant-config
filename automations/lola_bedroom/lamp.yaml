@@ -16,27 +16,28 @@ trigger:
     event: sunset
     offset: 0
 
-  - id: &sleep_trigger sleep_trigger
-    platform: state
-    entity_id: schedule.lola_lights_out
+  - id: lights_outs
+    platform: time
+    at: input_datetime.lola_lights_out
 
-  - id: &fallback_trigger fallback_trigger
+  - id: fallback_trigger
     platform: time
     at: "22:00:00"
 
-condition: []
+condition:
+  - condition: state
+    entity_id: input_boolean.kill_switch_lola_lamp
+    state: "off"
 
 variables:
   anchors:
     - &turn_on_low
       service: scene.turn_on
-      data: {}
       target:
         entity_id: scene.lola_s_room_nightlight
 
     - &turn_on_high
       service: scene.turn_on
-      data: {}
       target:
         entity_id: scene.lola_s_room_bright
 
@@ -50,10 +51,10 @@ action:
       - conditions:
           - alias: "Motion detected at night"
             and:
-              - alias: "When sleeping"
-                condition: state
-                entity_id: schedule.lola_lights_out
-                state: "on"
+              - alias: "After lights out"
+                condition: time
+                after: input_datetime.lola_lights_out
+                before: sensor.sun_next_dawn
               - alias: "Motion detected"
                 condition: trigger
                 id: *motion_detected
@@ -70,13 +71,5 @@ action:
         sequence:
           - *turn_on_high
 
-      - conditions:
-          or:
-            - alias: "When sleep starts/stops"
-              condition: trigger
-              id: *sleep_trigger
-            - alias: "On fallback trigger"
-              condition: trigger
-              id: *fallback_trigger
-        sequence:
-          - *turn_off
+    default:
+      - *turn_off

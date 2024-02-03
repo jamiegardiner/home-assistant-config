@@ -1,0 +1,42 @@
+---
+alias: "Lola Bedroom - Echo"
+id: "91c00213-d620-4d23-829e-f70b297a7f6c"
+mode: single
+
+trigger:
+  - id: &home_mode "home_mode"
+  - platform: state
+    entity_id:
+      - input_boolean.home_mode_sleep
+
+  - id: "bedtime"
+    platform: time
+    at: input_datetime.lola_lights_out
+
+  - id: "fallback_trigger"
+    platform: time
+    at: "21:30:00"
+
+condition: []
+
+action:
+  - choose:
+      - conditions:
+          - and:
+              - condition: trigger
+                id: *home_mode
+              - condition: state
+                entity_id: input_boolean.home_mode_sleep
+                state: "off"
+        sequence:
+          - service: switch.turn_off
+            target:
+              entity_id: switch.lola_s_echo_do_not_disturb_switch
+
+    default:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.lola_s_echo_do_not_disturb_switch
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.lola_s_echo

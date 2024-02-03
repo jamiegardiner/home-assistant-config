@@ -1,0 +1,21 @@
+---
+alias: Notify - Lola Bedtime
+id: "b93cff34-044d-4f02-8e4f-764555ac9819"
+mode: single
+
+trigger:
+  - platform: time
+    at: input_datetime.lola_next_bedtime
+
+condition: []
+
+action:
+  - service: notify.alexa_media
+    data:
+      target:
+        - media_player.living_room_echo
+        - media_player.lola_s_echo
+      message: Lozzle chops, it's your bedtime. Go and brush your teeth.
+      data:
+        type: announce
+        method: all
