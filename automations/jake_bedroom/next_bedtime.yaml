@@ -31,4 +31,4 @@ action:
             target:
               entity_id: input_datetime.jake_next_bedtime
             data:
-              time: "21:10:00"
+              time: "21:30:00"
