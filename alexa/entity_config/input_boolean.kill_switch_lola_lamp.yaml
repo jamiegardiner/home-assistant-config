@@ -1,0 +1,4 @@
+---
+name: "Lola's Motion Sensor"
+description: "Kill switch for Lola's lamp automation"
+display_categories: SWITCH
