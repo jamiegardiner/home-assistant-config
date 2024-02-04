@@ -1,6 +1,7 @@
 ---
 platform: generic_thermostat
 name: Garage
+unique_id: garage_thermostat
 heater: switch.garage_fan_heater
 target_sensor: sensor.garage_thermometer_temperature
 min_temp: 10
