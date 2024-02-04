@@ -22,7 +22,8 @@ condition: []
 action:
   - choose:
       - conditions:
-          - and:
+          - alias: In the morning
+            and:
               - condition: trigger
                 id: *home_mode
               - condition: state

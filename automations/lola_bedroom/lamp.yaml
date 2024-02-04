@@ -16,11 +16,11 @@ trigger:
     event: sunset
     offset: 0
 
-  - id: lights_outs
+  - id: &lights_outs lights_out
     platform: time
     at: input_datetime.lola_lights_out
 
-  - id: fallback_trigger
+  - id: &fallback_trigger fallback_trigger
     platform: time
     at: "22:00:00"
 
@@ -71,5 +71,11 @@ action:
         sequence:
           - *turn_on_high
 
-    default:
-      - *turn_off
+      - conditions:
+          or:
+            - condition: trigger
+              id: *fallback_trigger
+            - condition: trigger
+              id: *lights_outs
+        sequence:
+          - *turn_off
