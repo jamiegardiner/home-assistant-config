@@ -5,7 +5,7 @@ mode: single
 
 trigger:
   - id: &home_mode "home_mode"
-  - platform: state
+    platform: state
     entity_id:
       - input_boolean.home_mode_sleep
 

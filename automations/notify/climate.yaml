@@ -6,7 +6,6 @@ mode: queued
 trigger:
   - platform: state
     entity_id:
-      - climate.hall
       - climate.garage
       - climate.living_room
       - climate.bedroom
@@ -16,7 +15,10 @@ trigger:
       - climate.landing
     attribute: hvac_action
 
-condition: []
+condition:
+  - condition: state
+    entity_id: "input_boolean.kill_switch_notify_climate"
+    state: "off"
 
 action:
   service: notify.mobile_app_s23_ultra
