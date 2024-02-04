@@ -1,4 +1,4 @@
 ---
 name: Kill Switch - Lola Lamp
 icon: mdi:lightbulb-off-outline
-initial: false
+initial: true

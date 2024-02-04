@@ -1,4 +1,4 @@
 ---
 name: Kill Switch - Notify Climate
 icon: mdi:message-bulleted-off
-initial: false
+initial: true
