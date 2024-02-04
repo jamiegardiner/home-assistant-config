@@ -1,5 +1,5 @@
 ---
-alias: "Notify - Echo"
+alias: "Notify - Kitchen Echo Timer"
 id: "notify_on_timer_up"
 mode: queued
 

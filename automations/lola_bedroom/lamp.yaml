@@ -27,7 +27,7 @@ trigger:
 condition:
   - condition: state
     entity_id: input_boolean.kill_switch_lola_lamp
-    state: "off"
+    state: "on"
 
 variables:
   anchors:
