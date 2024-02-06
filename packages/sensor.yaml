@@ -6,3 +6,4 @@ sensor:
     filters:
       - filter: throttle
         window_size: 10
+        precision: 2
