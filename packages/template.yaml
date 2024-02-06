@@ -1,0 +1,10 @@
+---
+template:
+  - sensor:
+      - name: "Garage Energy Cost Today"
+        unit_of_measurement: "£"
+        state: >
+          {% set fan = states('sensor.garage_fan_heater_today_energy_cost_2') | float(default=0) %}
+          {% set halogen = states('sensor.garage_halogen_heater_today_energy_cost_2') | float(default=0) %}
+
+          {{ (fan + halogen) | round(2, default=0) }}
