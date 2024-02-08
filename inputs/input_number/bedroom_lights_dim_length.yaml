@@ -2,6 +2,6 @@
 name: Bedroom Lights - Dim Length
 icon: mdi:arrow-expand-horizontal
 min: 0
-max: 60
+max: 3600
 mode: slider
 step: 1

@@ -44,7 +44,7 @@ variables:
       service: light.turn_off
       <<: *target
       data:
-        transition: input_number.bedroom_lights_dim_length
+        transition: "{{ states('input_number.bedroom_lights_dim_length') }}"
 
     - &turn_off
       service: light.turn_off
