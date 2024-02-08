@@ -1,0 +1,6 @@
+---
+name: Bedroom - Start Dim
+icon: mdi:bed-clock
+has_date: false
+has_time: true
+initial: "22:20:00"
