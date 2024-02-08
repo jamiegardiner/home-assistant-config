@@ -1,0 +1,8 @@
+---
+name: Electricity Cost Per GBP/kWh
+icon: mdi:currency-gbp
+min: 0
+max: 1
+mode: slider
+unit_of_measurement: "GBP/kWh"
+step: 0.0001
