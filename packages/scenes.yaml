@@ -2,4 +2,4 @@
 # scenes created in the UI
 scene ui: !include ../scenes.yaml
 # scenes created in YAML
-scene manual: !include_dir_list ../scenes
+scene manual: !include_dir_named ../scenes
