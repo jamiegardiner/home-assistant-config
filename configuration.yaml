@@ -13,6 +13,3 @@ frontend:
 # Text to speech
 tts:
   - platform: google_translate
-
-script: !include scripts.yaml
-scene: !include scenes.yaml

@@ -1,0 +1,5 @@
+---
+# scripts created in the UI
+scene ui: !include ../scripts.yaml
+# scripts created in YAML
+script manual: !include_dir_list ../scripts

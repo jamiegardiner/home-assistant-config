@@ -1,0 +1,12 @@
+---
+alias: Decrease Lola Bedtime
+mode: single
+icon: mdi:plus
+sequence:
+  - service: input_datetime.set_datetime
+    data:
+      time: >
+        {{ (today_at(states('input_datetime.lola_next_bedtime')) -
+        timedelta(seconds=300)).strftime('%H:%M:%S') }}
+    target:
+      entity_id: input_datetime.lola_next_bedtime
