@@ -9,7 +9,7 @@ ignore: |
   notebooks/
   scenes.yaml
   scripts.yaml
-  themes/*.yaml
+  themes/**/*.yaml
   govee_learning.yaml
 rules:
   braces:
