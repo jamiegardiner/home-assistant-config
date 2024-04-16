@@ -1,0 +1,28 @@
+- id: '1708859814387'
+  alias: Garage - Fan Heater
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.garage_fan_heater
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: climate.garage
+        attribute: hvac_action
+        state: 'off'
+      sequence:
+      - service: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: 1b7af3eff0ca5891beb8cbeff6b14703
+  mode: single
