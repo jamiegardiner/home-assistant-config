@@ -1,0 +1,49 @@
+---
+alias: "Garage - Camera"
+id: "9e9beaa4-d52d-4f06-8f08-961127e2dfea"
+mode: queued
+
+trigger:
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
+  - platform: state
+    entity_id:
+      - input_boolean.home_mode_away
+      - input_boolean.home_mode_working
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: camera.blink_garage
+
+    - &turn_off
+      <<: *target
+      alias: "Turn off motion"
+      service: camera.disable_motion_detection
+      data: {}
+
+    - &turn_on
+      <<: *target
+      alias: "Turn on motion"
+      service: camera.enable_motion_detection
+      data: {}
+
+action:
+  - choose:
+      - conditions:
+          - alias: "When working from home"
+            condition: state
+            entity_id: input_boolean.home_mode_working
+            state: "on"
+        sequence:
+          - *turn_off
+
+    default:
+      - *turn_on

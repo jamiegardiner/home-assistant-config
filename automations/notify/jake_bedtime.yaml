@@ -14,8 +14,16 @@ action:
     data:
       target:
         - media_player.living_room_echo
-        - media_player.jake_s_echo
       message: Jake, it's your bedtime. Go and brush your teeth.
       data:
         type: announce
+        method: all
+
+  - service: notify.alexa_media_living_room_echo
+    data:
+      target:
+        - media_player.jake_s_echo
+      message: Hey, Jakey Jingles, it's your bedtime. Go and brush your teeth. <amazon:effect name='whispered'>That means now.</amazon:effect>
+      data:
+        type: tts
         method: all
