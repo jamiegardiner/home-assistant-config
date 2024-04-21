@@ -4,15 +4,21 @@ id: "toggle_cameras"
 mode: single
 
 trigger:
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
   - platform: state
     id: &when_away "when_away"
     entity_id:
       - input_boolean.home_mode_away
     to: "on"
 
-  - platform: tag
-    id: &scan_tag "scan_tag"
-    tag_id: 26fecee1-f7f6-4288-b8e9-e68ac3b8b518
+  - id: &fallback_trigger fallback_trigger
+    platform: time
+    at: "18:00:00"
 
 condition: []
 
@@ -33,17 +39,4 @@ variables:
       data: { }
 
 action:
-  - choose:
-      - conditions:
-          - alias: "When away"
-            condition: trigger
-            id: *when_away
-        sequence:
-          - *turn_on
-
-      - conditions:
-          - alias: "When tag scanned"
-            condition: trigger
-            id: *scan_tag
-        sequence:
-          - *turn_off
+  - *turn_on

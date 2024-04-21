@@ -24,7 +24,7 @@ trigger:
 
   - platform: tag
     id: &tag_scanned "tag_scanned"
-    tag_id: 3a4a3d2e-f107-4dd5-b993-f2bd0fd01d14
+    tag_id: cea7b1f9-685d-4be3-b51d-71ebecdef544
 
   - id: &heater_on "heater_on"
     platform: state
