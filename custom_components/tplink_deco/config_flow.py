@@ -1,4 +1,5 @@
 """Adds config flow for TP-Link Deco."""
+import asyncio
 import logging
 from typing import Any
 
@@ -15,6 +16,7 @@ from homeassistant.const import CONF_USERNAME
 from homeassistant.core import callback
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.exceptions import ConfigEntryNotReady
 
 from .__init__ import async_create_and_refresh_coordinators
 from .const import CONF_CLIENT_POSTFIX
@@ -24,6 +26,8 @@ from .const import CONF_DECO_PREFIX
 from .const import CONF_TIMEOUT_ERROR_RETRIES
 from .const import CONF_TIMEOUT_SECONDS
 from .const import CONF_VERIFY_SSL
+from .const import COORDINATOR_CLIENTS_KEY
+from .const import COORDINATOR_DECOS_KEY
 from .const import DEFAULT_CONSIDER_HOME
 from .const import DEFAULT_DECO_POSTFIX
 from .const import DEFAULT_SCAN_INTERVAL
@@ -51,7 +55,9 @@ def _get_schema(data: dict[str:Any]):
     scan_interval = data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     schema.update(
         {
-            vol.Required(CONF_HOST, default=data.get(CONF_HOST, "192.168.0.1")): str,
+            vol.Required(
+                CONF_HOST, default=data.get(CONF_HOST, "http://192.168.0.1")
+            ): str,
             vol.Required(
                 CONF_SCAN_INTERVAL,
                 default=scan_interval,
@@ -112,22 +118,32 @@ def _ensure_user_input_optionals(data: dict[str:Any]) -> None:
 async def _async_test_credentials(hass: HomeAssistant, data: dict[str:Any]):
     """Return true if credentials is valid."""
     try:
-        await async_create_and_refresh_coordinators(hass, data, consider_home_seconds=1)
+        coordinators = await async_create_and_refresh_coordinators(
+            hass, data, consider_home_seconds=1
+        )
+        await asyncio.gather(
+            coordinators[COORDINATOR_DECOS_KEY].async_shutdown(),
+            coordinators[COORDINATOR_CLIENTS_KEY].async_shutdown(),
+        )
         return {}
     except TimeoutException:
         return {"base": "timeout_connect"}
     except ConfigEntryAuthFailed as err:
-        _LOGGER.warning("Error authenticating credentials: %s", err)
+        _LOGGER.error("Error authenticating credentials: %s", err)
         return {"base": "invalid_auth"}
+    except ConfigEntryNotReady as err:
+        _LOGGER.error("Error connection to host: %s", err)
+        return {"base": "invalid_host"}
     except Exception as err:
-        _LOGGER.warning("Error testing credentials: %s", err)
+        _LOGGER.error("Error testing credentials: %s", err)
+        raise err
         return {"base": "unknown"}
 
 
 class TplinkDecoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for tplink_deco."""
 
-    VERSION = 5
+    VERSION = 6
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
     reauth_entry: ConfigEntry = None
 
@@ -194,6 +210,7 @@ class TplinkDecoOptionsFlowHandler(config_entries.OptionsFlow):
 
     def __init__(self, config_entry: ConfigEntry):
         """Initialize HACS options flow."""
+        self.config_entry = config_entry
         self.data = dict(config_entry.data)
         self._errors = {}
 
@@ -207,7 +224,13 @@ class TplinkDecoOptionsFlowHandler(config_entries.OptionsFlow):
 
             self._errors = await _async_test_credentials(self.hass, self.data)
             if len(self._errors) == 0:
-                return self.async_create_entry(data=self.data)
+                self.hass.config_entries.async_update_entry(
+                    entry=self.config_entry,
+                    title=self.data[CONF_HOST],
+                    data=self.data,
+                    options={},
+                )
+                return self.async_create_entry(data={})
 
         return self.async_show_form(
             step_id="init",

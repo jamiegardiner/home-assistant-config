@@ -153,6 +153,8 @@ async def async_create_config_data(hass: HomeAssistant, config_entry: ConfigEntr
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     """Set up this integration using UI."""
+    _LOGGER.debug("async_setup_entry: Config entry %s", config_entry.entry_id)
+
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
 
@@ -161,8 +163,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     deco_coordinator = data[COORDINATOR_DECOS_KEY]
 
     for platform in PLATFORMS:
-        hass.async_add_job(
-            hass.config_entries.async_forward_entry_setup(config_entry, platform)
+        config_entry.async_create_task(
+            hass, hass.config_entries.async_forward_entry_setup(config_entry, platform)
         )
 
     async def async_reboot_deco(service: ServiceCall) -> None:
@@ -194,11 +196,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     )
 
     config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
+
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
+    _LOGGER.debug("async_unload_entry: Config entry %s", config_entry.entry_id)
     data = hass.data[DOMAIN][config_entry.entry_id]
     deco_coordinator = data.get(COORDINATOR_DECOS_KEY)
     clients_coordinator = data.get(COORDINATOR_CLIENTS_KEY)
@@ -223,27 +227,14 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
 
 async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
     """Reload config entry."""
+    _LOGGER.debug("async_reload_entry: Config entry %s", config_entry)
     await async_unload_entry(hass, config_entry)
     await async_setup_entry(hass, config_entry)
 
 
 async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
     """Update options."""
-    if not config_entry.options or config_entry.data == config_entry.options:
-        _LOGGER.debug(
-            "update_listener: No changes in options for %s", config_entry.entry_id
-        )
-        return
-
-    _LOGGER.debug(
-        "update_listener: Updating options and reloading %s", config_entry.entry_id
-    )
-    hass.config_entries.async_update_entry(
-        entry=config_entry,
-        title=config_entry.options.get(CONF_HOST),
-        data=config_entry.options,
-        options={},
-    )
+    _LOGGER.debug("update_listener: Reloading %s", config_entry.entry_id)
     await async_reload_entry(hass, config_entry)
 
 
@@ -271,6 +262,10 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         new[CONF_CLIENT_POSTFIX] = ""
         new[CONF_DECO_PREFIX] = ""
         new[CONF_DECO_POSTFIX] = DEFAULT_DECO_POSTFIX
+
+    if config_entry.version == 5:
+        config_entry.version = 6
+        new[CONF_HOST] = f"http://{new[CONF_HOST]}"
 
     hass.config_entries.async_update_entry(config_entry, data=new)
 
