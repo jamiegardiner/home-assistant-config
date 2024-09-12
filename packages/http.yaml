@@ -1,8 +1,8 @@
 ---
 http:
-  server_port: 8443
-  ssl_certificate: !secret ssl_certificate_path
-  ssl_key: !secret ssl_key_path
+  server_port: 8123
+  #ssl_certificate: !secret ssl_certificate_path
+  #ssl_key: !secret ssl_key_path
   use_x_forwarded_for: true
   trusted_proxies:
     - 173.245.48.0/20
@@ -22,3 +22,6 @@ http:
     - 131.0.72.0/22
   ip_ban_enabled: true
   login_attempts_threshold: 3
+  cors_allowed_origins:
+    - https://www.amazon.com
+    - https://www.amazon.co.uk
