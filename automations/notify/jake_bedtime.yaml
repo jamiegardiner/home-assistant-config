@@ -12,7 +12,7 @@ condition: []
 action:
   - service: notify.alexa_media_living_room_echo
     data:
-      message:  >-
+      message: >-
         <speak>
           <voice name="Brian">
             Hey, Jakey Jingles, it's your bedtime. Go and brush your teeth.
