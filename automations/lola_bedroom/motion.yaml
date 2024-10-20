@@ -1,0 +1,18 @@
+---
+alias: "Lola Bedroom - Motion"
+id: "lola_bedroom_motion"
+mode: single
+
+trigger:
+  - id: "home_mode"
+    platform: state
+    entity_id:
+      - input_boolean.home_mode_sleep
+    state: "off"
+
+condition: []
+
+action:
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.kill_switch_lola_lamp
