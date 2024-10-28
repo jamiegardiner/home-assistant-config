@@ -1,4 +1,4 @@
 ---
-name: "Lola's Motion Sensor"
+name: "Lola's Motion Kill Switch"
 description: "Kill switch for Lola's lamp automation"
 display_categories: SWITCH

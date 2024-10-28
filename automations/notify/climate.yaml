@@ -18,7 +18,7 @@ trigger:
 condition:
   - condition: state
     entity_id: "input_boolean.kill_switch_notify_climate"
-    state: "on"
+    state: "off"
 
 action:
   service: notify.mobile_app_s23_ultra

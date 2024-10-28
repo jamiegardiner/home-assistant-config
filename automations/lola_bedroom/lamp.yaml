@@ -24,10 +24,7 @@ trigger:
     platform: time
     at: "22:00:00"
 
-condition:
-  - condition: state
-    entity_id: input_boolean.kill_switch_lola_lamp
-    state: "on"
+condition: []
 
 variables:
   anchors:
@@ -58,6 +55,10 @@ action:
               - alias: "Motion detected"
                 condition: trigger
                 id: *motion_detected
+              - alias: "Detecting motion"
+                condition: state
+                entity_id: input_boolean.kill_switch_lola_lamp
+                state: "off"
         sequence:
           - *turn_on_low
           - delay:
