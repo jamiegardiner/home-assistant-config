@@ -10,6 +10,12 @@ trigger:
       - input_boolean.home_mode_sleep
     to: "off"
 
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
 condition: []
 
 action:
