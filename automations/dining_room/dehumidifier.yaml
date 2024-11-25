@@ -1,0 +1,43 @@
+---
+alias: "Dining Room - Dehumidifier"
+id: "dining-room-dehumidifier"
+mode: single
+
+trigger:
+  - id: "sleep_mode"
+    platform: state
+    entity_id: input_boolean.home_mode_sleep
+    to: "on"
+
+  - id: &humidity "humidity"
+    platform: numeric_state
+    entity_id:
+    - sensor.dining_room_humidity
+    above: 55
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: switch.bot_6e77
+
+    - &turn_on
+      service: switch.turn_on
+      <<: *target
+
+    - &turn_off
+      service: switch.turn_off
+      <<: *target
+
+action:
+  - choose:
+      - conditions:
+          - alias: "When humid"
+            condition: trigger
+            id: *humidity
+        sequence:
+          - *turn_on
+    default:
+      - *turn_off
