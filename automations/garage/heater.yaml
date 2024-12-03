@@ -26,14 +26,6 @@ trigger:
     id: &tag_scanned "tag_scanned"
     tag_id: cea7b1f9-685d-4be3-b51d-71ebecdef544
 
-  - id: &heater_on "heater_on"
-    platform: state
-    entity_id: switch.garage_fan_heater
-    from: "off"
-    to: "on"
-    for:
-      seconds: 5
-
 condition: []
 
 variables:
@@ -58,18 +50,6 @@ action:
             id: *tag_scanned
         sequence:
           - *toggle
-
-      - conditions:
-          - alias: "When turned on and HVAC off"
-            and:
-              - condition: trigger
-                id: *heater_on
-              - condition: state
-                entity_id: climate.garage
-                attribute: hvac_action
-                state: 'off'
-        sequence:
-          - *turn_off
 
     default:
       - *turn_off

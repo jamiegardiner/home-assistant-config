@@ -15,6 +15,14 @@ trigger:
       - input_boolean.home_mode_away
       - input_boolean.home_mode_working
 
+  - id: &heater_on "heater_on"
+    platform: state
+    entity_id: switch.garage_fan_heater
+    from: "off"
+    to: "on"
+    for:
+      seconds: 5
+
 condition: []
 
 variables:
@@ -46,6 +54,20 @@ variables:
 
 action:
   - choose:
+      - conditions:
+          - alias: "When turned on and HVAC off"
+            and:
+              - condition: trigger
+                id: *heater_on
+              - condition: state
+                entity_id: climate.garage
+                attribute: hvac_action
+                state: 'off'
+        sequence:
+          - service: switch.turn_off
+            target:
+              entity_id: switch.garage_fan_heater
+
       - conditions:
           - alias: "When the house is in away mode"
             condition: state
