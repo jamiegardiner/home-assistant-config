@@ -4,6 +4,12 @@ id: "christmas_lights"
 mode: single
 
 trigger:
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
   - id: &on_sunset "sunset_trigger"
     platform: sun
     event: sunset
