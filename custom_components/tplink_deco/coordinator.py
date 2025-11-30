@@ -1,15 +1,17 @@
 """TP-Link Deco Coordinator"""
+
 import asyncio
-import ipaddress
-import logging
 from collections.abc import Callable
 from datetime import datetime
 from datetime import timedelta
+import ipaddress
+import logging
 from typing import Any
 
-from homeassistant.core import callback
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import CALLBACK_TYPE
 from homeassistant.core import HomeAssistant
+from homeassistant.core import callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -145,6 +147,7 @@ class TplinkDecoUpdateCoordinator(DataUpdateCoordinator):
         self,
         hass: HomeAssistant,
         api: TplinkDecoApi,
+        config_entry: ConfigEntry,
         update_interval: timedelta = None,
         data: TpLinkDecoData = None,
     ) -> None:
@@ -155,6 +158,7 @@ class TplinkDecoUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name=f"{DOMAIN}-decos",
             update_interval=update_interval,
         )
@@ -210,6 +214,7 @@ class TplinkDecoClientUpdateCoordinator(DataUpdateCoordinator):
         self,
         hass: HomeAssistant,
         api: TplinkDecoApi,
+        config_entry: ConfigEntry,
         deco_update_coordinator: TplinkDecoUpdateCoordinator,
         consider_home_seconds: int,
         update_interval: timedelta = None,
@@ -224,6 +229,7 @@ class TplinkDecoClientUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name=f"{DOMAIN}-clients",
             update_interval=update_interval,
         )

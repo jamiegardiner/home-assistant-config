@@ -49,6 +49,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import config_validation as cv, device_registry as dr
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
+from homeassistant.helpers.issue_registry import IssueSeverity, async_create_issue
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt, slugify
 import voluptuous as vol
@@ -133,6 +134,25 @@ async def async_setup(hass, config, discovery_info=None):
             "Nothing to import from configuration.yaml, loading from Integrations",
         )
         return True
+
+    async_create_issue(
+        hass,
+        DOMAIN,
+        "deprecated_yaml_configuration",
+        is_fixable=False,
+        issue_domain=DOMAIN,
+        severity=IssueSeverity.WARNING,
+        translation_key="deprecated_yaml_configuration",
+        learn_more_url="https://github.com/alandtse/alexa_media_player/wiki/Configuration#configurationyaml",
+    )
+    _LOGGER.warning(
+        "YAML configuration of Alexa Media Player is deprecated "
+        "and will be removed in version 4.14.0."
+        "There will be no automatic import of this. "
+        "Please remove it from your configuration, "
+        "restart Home Assistant and use the UI to configure it instead. "
+        "Settings > Devices and services > Integrations > ADD INTEGRATION"
+    )
 
     domainconfig = config.get(DOMAIN)
     for account in domainconfig[CONF_ACCOUNTS]:
@@ -485,7 +505,13 @@ async def setup_alexa(hass, config_entry, login_obj: AlexaLogin):
                     _LOGGER.debug(
                         "Alexa entities have been loaded. Prepared for discovery."
                     )
-                    alexa_entities = parse_alexa_entities(optional_task_results.pop())
+                    api_devices = optional_task_results.pop()
+                    if not api_devices:
+                        _LOGGER.warning(
+                            "%s: Alexa API returned an unexpected response while getting connected devices.",
+                            hide_email(email),
+                        )
+                    alexa_entities = parse_alexa_entities(api_devices)
                     hass.data[DATA_ALEXAMEDIA]["accounts"][email]["devices"].update(
                         alexa_entities
                     )
@@ -1046,6 +1072,13 @@ async def setup_alexa(hass, config_entry, login_obj: AlexaLogin):
                             hass,
                             f"{DOMAIN}_{hide_email(email)}"[0:32],
                             {"player_state": json_payload},
+                        )
+                    elif command == "NotifyNowPlayingUpdated":
+                        _LOGGER.debug("Send NowPlaying: %s", hide_serial(json_payload))
+                        async_dispatcher_send(
+                            hass,
+                            f"{DOMAIN}_{hide_email(email)}"[0:32],
+                            {"now_playing": json_payload},
                         )
                 elif command == "PUSH_VOLUME_CHANGE":
                     # Player volume update

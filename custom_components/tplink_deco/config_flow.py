@@ -1,22 +1,21 @@
 """Adds config flow for TP-Link Deco."""
+
 import asyncio
 import logging
 from typing import Any
 
-import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.components.device_tracker.const import CONF_CONSIDER_HOME
 from homeassistant.components.device_tracker.const import CONF_SCAN_INTERVAL
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST
-from homeassistant.const import (
-    CONF_PASSWORD,
-)
+from homeassistant.const import CONF_PASSWORD
 from homeassistant.const import CONF_USERNAME
-from homeassistant.core import callback
 from homeassistant.core import HomeAssistant
+from homeassistant.core import callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.exceptions import ConfigEntryNotReady
+import voluptuous as vol
 
 from .__init__ import async_create_and_refresh_coordinators
 from .const import CONF_CLIENT_POSTFIX
@@ -119,7 +118,8 @@ async def _async_test_credentials(hass: HomeAssistant, data: dict[str:Any]):
     """Return true if credentials is valid."""
     try:
         coordinators = await async_create_and_refresh_coordinators(
-            hass, data, consider_home_seconds=1
+            hass,
+            data,
         )
         await asyncio.gather(
             coordinators[COORDINATOR_DECOS_KEY].async_shutdown(),

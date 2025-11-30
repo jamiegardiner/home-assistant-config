@@ -4,19 +4,18 @@ Custom integration to integrate TP-Link Deco with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/amosyuen/ha-tplink-deco
 """
+
 import asyncio
-import logging
 from datetime import timedelta
+import logging
 from typing import Any
 from typing import cast
 
-import homeassistant.helpers.config_validation as cv
-import voluptuous as vol
-from homeassistant.components.device_tracker.const import CONF_CONSIDER_HOME
-from homeassistant.components.device_tracker.const import CONF_SCAN_INTERVAL
 from homeassistant.components.device_tracker.const import (
     DOMAIN as DEVICE_TRACKER_DOMAIN,
 )
+from homeassistant.components.device_tracker.const import CONF_CONSIDER_HOME
+from homeassistant.components.device_tracker.const import CONF_SCAN_INTERVAL
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_DEVICE_ID
 from homeassistant.const import CONF_HOST
@@ -28,6 +27,8 @@ from homeassistant.helpers import device_registry
 from homeassistant.helpers import entity_registry
 from homeassistant.helpers import restore_state
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
 
 from .api import TplinkDecoApi
 from .const import ATTR_DEVICE_TYPE
@@ -51,8 +52,8 @@ from .const import PLATFORMS
 from .const import SERVICE_REBOOT_DECO
 from .coordinator import TpLinkDeco
 from .coordinator import TpLinkDecoClient
-from .coordinator import TplinkDecoClientUpdateCoordinator
 from .coordinator import TpLinkDecoData
+from .coordinator import TplinkDecoClientUpdateCoordinator
 from .coordinator import TplinkDecoUpdateCoordinator
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -61,7 +62,8 @@ _LOGGER: logging.Logger = logging.getLogger(__name__)
 async def async_create_and_refresh_coordinators(
     hass: HomeAssistant,
     config_data: dict[str:Any],
-    consider_home_seconds,
+    config_entry: ConfigEntry = None,
+    consider_home_seconds=1,
     update_interval: timedelta = None,
     deco_data: TpLinkDecoData = None,
     client_data: dict[str:TpLinkDecoClient] = None,
@@ -84,18 +86,25 @@ async def async_create_and_refresh_coordinators(
         timeout_seconds,
     )
     deco_coordinator = TplinkDecoUpdateCoordinator(
-        hass, api, update_interval, deco_data
+        hass, api, config_entry, update_interval, deco_data
     )
-    await deco_coordinator.async_config_entry_first_refresh()
+    if config_entry is None:
+        await deco_coordinator._async_update_data()
+    else:
+        await deco_coordinator.async_config_entry_first_refresh()
     clients_coordinator = TplinkDecoClientUpdateCoordinator(
         hass,
         api,
+        config_entry,
         deco_coordinator,
         consider_home_seconds,
         update_interval,
         client_data,
     )
-    await clients_coordinator.async_config_entry_first_refresh()
+    if config_entry is None:
+        await deco_coordinator._async_update_data()
+    else:
+        await clients_coordinator.async_config_entry_first_refresh()
 
     return {
         COORDINATOR_DECOS_KEY: deco_coordinator,
@@ -144,6 +153,7 @@ async def async_create_config_data(hass: HomeAssistant, config_entry: ConfigEntr
     return await async_create_and_refresh_coordinators(
         hass,
         config_entry.data,
+        config_entry,
         consider_home_seconds,
         update_interval,
         deco_data,
@@ -162,10 +172,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     hass.data[DOMAIN][config_entry.entry_id] = data
     deco_coordinator = data[COORDINATOR_DECOS_KEY]
 
-    for platform in PLATFORMS:
-        config_entry.async_create_task(
-            hass, hass.config_entries.async_forward_entry_setup(config_entry, platform)
-        )
+    hass.async_create_task(
+        hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
+    )
 
     async def async_reboot_deco(service: ServiceCall) -> None:
         dr = device_registry.async_get(hass=hass)
