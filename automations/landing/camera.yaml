@@ -1,0 +1,48 @@
+---
+alias: "Garden - Camera"
+id: "dab55a89-c1fe-476b-93f0-8642efb19958"
+mode: queued
+
+trigger:
+  - platform: homeassistant
+    event: start
+
+  - platform: event
+    event_type: automation_reloaded
+
+  - platform: state
+    entity_id:
+      - input_boolean.home_mode_away
+
+condition: []
+
+variables:
+  anchors:
+    - &target
+      target:
+        entity_id: camera.landing
+
+    - &turn_off
+      <<: *target
+      alias: "Turn off motion"
+      service: camera.disable_motion_detection
+      data: {}
+
+    - &turn_on
+      <<: *target
+      alias: "Turn on motion"
+      service: camera.enable_motion_detection
+      data: {}
+
+action:
+  - choose:
+      - conditions:
+          - alias: "When home"
+            condition: state
+            entity_id: input_boolean.home_mode_away
+            state: "off"
+        sequence:
+          - *turn_off
+
+    default:
+      - *turn_on

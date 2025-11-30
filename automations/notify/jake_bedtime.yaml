@@ -12,27 +12,13 @@ condition: []
 action:
   - service: notify.alexa_media_living_room_echo
     data:
-      message: >-
-        <speak>
-          <voice name="Brian">
-            Hey, Jakey Jingles, it's your bedtime. Go and brush your teeth.
-            <break time='10s'/>
-            That means <emphasis level='strong'>NOW</emphasis>.
-          </voice>
-        </speak>
+      message: Jake, brush your teeth, please.
       data:
         type: announce
         method: all
 
   - service: notify.alexa_media_jake_s_echo
     data:
-      message: >-
-        <speak>
-          <voice name="Brian">
-            Hey, Jakey Jingles, it's your bedtime. Go and brush your teeth.
-            <break time='10s'/>
-            That means <emphasis level='strong'>NOW</emphasis>.
-          </voice>
-        </speak>
+      message: Jake, brush your teeth, please.
       data:
         type: tts
