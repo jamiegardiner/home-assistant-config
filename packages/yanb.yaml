@@ -4,7 +4,9 @@ ynab:
   budget: !secret ynab_budget
   api_key: !secret ynab_token
   categories:
-    - "Eating Out / Takeaway"
+    - "Eating Out"
+    - "Takeaway"
+    - "Pub"
     - "Family Days Out"
   accounts:
     - "Monzo"
