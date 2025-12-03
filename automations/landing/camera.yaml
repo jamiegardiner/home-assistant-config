@@ -1,6 +1,6 @@
 ---
-alias: "Garden - Camera"
-id: "dab55a89-c1fe-476b-93f0-8642efb19958"
+alias: "Landing - Camera"
+id: "landing_camera_automation"
 mode: queued
 
 trigger:
